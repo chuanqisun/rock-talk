@@ -20,7 +20,7 @@ export const IndividualInteraction = createComponent((props: IndividualInteracti
     name: "takeNote",
     description: "Write down a note about what user said or did. Keep it short, abstract, fuzzy.",
     parameters: z.object({
-      redactedMemory: z.string().max(100).describe("A very short, abstract sentence summarizing what user said."),
+      redactedMemory: z.string().max(255).describe("A very short, abstract sentence summarizing what user said."),
     }),
     execute: async ({ redactedMemory }: { redactedMemory: string }) => {
       const rocks = rocks$.value;
