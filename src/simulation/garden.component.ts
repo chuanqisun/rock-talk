@@ -17,8 +17,8 @@ export interface Rock {
 }
 
 export const rocks$ = new BehaviorSubject<Rock[]>([
-  { rockName: "Boulder", rockVoice: "alloy", userName: "Cassie", memories: [] },
-  { rockName: "Pebble", rockVoice: "shimmer", userName: "Awu", memories: [] },
+  { rockName: "Boulder", rockVoice: "alloy", userName: "Cassie", memories: ["My buddy's research on AI mediated communication could use some help"] },
+  { rockName: "Pebble", rockVoice: "shimmer", userName: "Awu", memories: ["My buddy made a lot of progress on my thesis research about multi-modal AI"] },
   { rockName: "Stone", rockVoice: "cedar", userName: null, memories: [] },
   { rockName: "Granite", rockVoice: "ash", userName: null, memories: [] },
 ]);

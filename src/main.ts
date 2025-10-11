@@ -6,6 +6,7 @@ import { map } from "rxjs";
 import { ConnectionsComponent } from "./connections/connections.component";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
+import { DiscussionComponent } from "./simulation/discussion.component";
 import { RockAdoption, rocks$ } from "./simulation/garden.component";
 import { IndividualInteraction } from "./simulation/individual.component";
 import { MemoryComponent } from "./simulation/memory.component";
@@ -29,7 +30,7 @@ const Main = createComponent(() => {
     <main>
       <section>
         <h2>Group</h2>
-        ${RockAdoption()}
+        ${RockAdoption()} ${DiscussionComponent()}
       </section>
       <section>
         <h2>Individual</h2>
