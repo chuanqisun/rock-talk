@@ -9,6 +9,8 @@ import { createComponent } from "../sdk/create-component";
 import { observe } from "../sdk/observe-directive";
 import { rocks$ } from "./garden.component";
 
+export const currentConnection$ = new BehaviorSubject<string[]>([]); //rock names
+
 const connectRocksTool = tool({
   name: "connectRocks",
   description: "Log the names of rocks that have a thematic connection for discussion",
@@ -17,6 +19,7 @@ const connectRocksTool = tool({
   }),
   execute: async ({ rockNames }: { rockNames: string[] }) => {
     console.log(`Connecting rocks for discussion: ${rockNames.join(", ")}`);
+    currentConnection$.next(rockNames);
     return `Logged`;
   },
 });
