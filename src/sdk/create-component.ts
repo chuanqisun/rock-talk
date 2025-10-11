@@ -3,9 +3,7 @@ import { guard } from "lit-html/directives/guard.js";
 import { isObservable, type Observable } from "rxjs";
 import { observe } from "./observe-directive";
 
-export function createComponent<TProps extends object | undefined = undefined>(
-  factory: (params: TProps) => Observable<TemplateResult> | TemplateResult,
-) {
+export function createComponent<TProps extends object | undefined = undefined>(factory: (params: TProps) => Observable<TemplateResult> | TemplateResult) {
   return (params?: TProps) => {
     const deps = params ? Object.entries(params).flatMap(([k, v]) => [k, v]) : [];
     return html`${guard(deps, () => {

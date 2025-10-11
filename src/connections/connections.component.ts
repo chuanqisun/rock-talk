@@ -4,16 +4,15 @@ import { catchError, debounceTime, distinctUntilChanged, mergeMap, tap } from "r
 import { createComponent } from "../sdk/create-component";
 import { observe } from "../sdk/observe-directive";
 import "./connections.component.css";
-import { saveApiKeys, type ApiKeys } from "./storage";
+import { loadApiKeys, saveApiKeys, type ApiKeys } from "./storage";
 import { testConnection } from "./test-connections";
 
-export interface ConnectionsComponentProps {
-  apiKeys$: BehaviorSubject<ApiKeys>;
-}
+export const apiKeys$ = new BehaviorSubject<ApiKeys>(loadApiKeys());
 
-export const ConnectionsComponent = createComponent((props: ConnectionsComponentProps) => {
+export interface ConnectionsComponentProps {}
+
+export const ConnectionsComponent = createComponent(() => {
   // 1. Internal state
-  const { apiKeys$ } = props;
   const testResults$ = new BehaviorSubject<{ openai?: string; together?: string; gemini?: string }>({});
   const testErrors$ = new BehaviorSubject<{ openai?: string; together?: string; gemini?: string }>({});
   const testLoading$ = new BehaviorSubject<{ openai?: boolean; together?: boolean; gemini?: boolean }>({});

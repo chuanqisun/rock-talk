@@ -7,7 +7,7 @@ export interface EphmeralTokenConfig {
   voice: string;
 }
 
-export function getEphermeralToken(config: EphmeralTokenConfig): Observable<string> {
+export function getEphermeralToken$(config: EphmeralTokenConfig): Observable<string> {
   const sessionConfig = JSON.stringify({
     session: { type: "realtime", model: config.model, audio: { output: { voice: config.voice } } },
   });
