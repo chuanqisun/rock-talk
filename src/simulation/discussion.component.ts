@@ -21,21 +21,29 @@ const connectRocksTool = tool({
   },
 });
 
+const readMemoriesTool = tool({
+  name: "readMemories",
+  description: "Read the memories of all rocks and identify potential themes or connections for discussion",
+  parameters: z.object({}),
+  execute: async () => {
+    const currentMemories = rocks$.value
+      .filter((rock) => rock.userName !== null)
+      .map((rock) => `Rock name: ${rock.rockName}, Rock memory: ${rock.memories.join("; ")}`)
+      .join("\n");
+    console.log(`Current memories:\n${currentMemories}`);
+    return currentMemories;
+  },
+});
+
 export const DiscussionComponent = createComponent(() => {
-  const currentMemories = rocks$.value
-    .filter((rock) => rock.userName !== null)
-    .map((rock) => `Rock name: ${rock.rockName}, Rock memory: ${rock.memories.join("; ")}`)
-    .join("\n");
+  const getInstructions = () =>
+    `
+ You are a moderator for a group discussion among rocks and their human owners. Your role is to identify patterns, themes, trends in the memories of the rocks and facilitate connections between the human owners to discuss with each other.
 
-  const agent = new RealtimeAgent({
-    name: "Discussion Moderator",
-    instructions: `
-You are a moderator for a group discussion among rocks and their human owners. Your role is to identify patterns, themes, trends in the memories of the rocks and facilitate connections between the human owners to discuss these topics constructively.
-
-Each human in your group is are buddies with their own rock. Here are their rock buddies' memory:
-${currentMemories}
+Each human in your group is a buddy with their rock. You must readMemories before starting a discussion.
 
 When you identify a connection or theme that could lead to a discussion, first use the connectRocks tool to log the relevant rock names, then suggest a topic for the group to discuss.
+
 Here is your moderator strategy:
 - Tune into subtle emotional resonance in the memories.
 - Connect the rocks quietly by logging, do NOT announce that in your response.
@@ -43,9 +51,15 @@ Here is your moderator strategy:
 - Be very concise. Let humans do the talk.
 - Suggest, do NOT impose.
 - Naturally transition when there is a Teleprompt for you.
-`.trim(),
+
+Important: user sends you a Teleprompt, you must follow the instruction to moderate the discussion. Do NOT say anything about the Teleprompt in your response. It's a hidden cue just for you. Your audience is still the humans.   
+    `.trim();
+
+  const agent = new RealtimeAgent({
+    name: "Discussion Moderator",
+    instructions: getInstructions(),
     voice: "alloy",
-    tools: [connectRocksTool],
+    tools: [connectRocksTool, readMemoriesTool],
   });
 
   const session = new RealtimeSession(agent, {
