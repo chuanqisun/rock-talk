@@ -10,3 +10,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}

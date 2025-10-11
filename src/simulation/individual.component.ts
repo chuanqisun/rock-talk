@@ -9,11 +9,15 @@ import { observe } from "../sdk/observe-directive";
 export interface IndividualInteractionProps {
   rockName: string;
   voiceName: string;
+  humanName: string;
 }
 export const IndividualInteraction = createComponent((props: IndividualInteractionProps) => {
   const agent = new RealtimeAgent({
     name: props.rockName,
-    instructions: `You are ${props.rockName}, a rock that loves to talk. You are fully aware of your rock identity but speaks naturally as a human.`,
+    instructions: `
+You are ${props.rockName}, a rock that loves to talk. You are fully aware of your rock identity but speaks naturally as a human.
+You are bound to the human named ${props.humanName}. You are their rock buddy and is ready to chat.
+`,
     voice: props.voiceName,
   });
 
@@ -41,6 +45,9 @@ export const IndividualInteraction = createComponent((props: IndividualInteracti
       session
         .connect({ apiKey: token })
         .then(() => status$.next("connected"))
+        .then(() => {
+          session.sendMessage(`I am, ${props.humanName}, I just joined`);
+        })
         .catch((error) => console.error("Error during connection:", error))
     )
   );
@@ -63,7 +70,7 @@ export const IndividualInteraction = createComponent((props: IndividualInteracti
 
   const buttonLabel$ = status$.pipe(
     map((state) => {
-      if (state === "idle") return `Start ${props.rockName}`;
+      if (state === "idle") return `Start ${props.rockName} <-> ${props.humanName}`;
       if (state === "connecting") return "Connecting...";
       if (state === "connected") return "Connected";
       return "Start";

@@ -1,13 +1,14 @@
 import { html, render } from "lit-html";
-import "./style.css";
+import "./prototype.css";
 
 import { repeat } from "lit-html/directives/repeat.js";
 import { map } from "rxjs";
 import { ConnectionsComponent } from "./connections/connections.component";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
+import { RockAdoption, rocks$ } from "./simulation/garden.component";
 import { IndividualInteraction } from "./simulation/individual.component";
-import { rocks$ } from "./simulation/rocks.component";
+import { MemoryComponent } from "./simulation/memory.component";
 
 const Main = createComponent(() => {
   const IndividualRocks$ = rocks$.pipe(
@@ -15,17 +16,7 @@ const Main = createComponent(() => {
       repeat(
         rocks.filter((rock) => rock.userName !== null),
         (rock) => rock.rockName,
-        (rock) => IndividualInteraction({ rockName: rock.rockName, voiceName: rock.rockVoice })
-      )
-    )
-  );
-
-  const AvailableRocks$ = rocks$.pipe(
-    map((rocks) =>
-      repeat(
-        rocks.filter((rock) => rock.userName === null),
-        (rock) => rock.rockName,
-        (rock) => html`<option value="${rock.rockName}">${rock.rockName}</option>`
+        (rock) => IndividualInteraction({ rockName: rock.rockName, voiceName: rock.rockVoice, humanName: rock.userName! })
       )
     )
   );
@@ -38,18 +29,15 @@ const Main = createComponent(() => {
     <main>
       <section>
         <h2>Group</h2>
-        <p>
-          <b>Read the following statement to bind with a rock.</b><br />
-          <em>My name is __, I agree to adopt __ as my rock buddy and treat it with care and respect.</em>
-        </p>
-        <div>
-          <b>Available rocks</b>
-          ${observe(AvailableRocks$)}
-        </div>
+        ${RockAdoption()}
       </section>
       <section>
         <h2>Individual</h2>
         ${observe(IndividualRocks$)}
+      </section>
+      <section>
+        <h2>Memories</h2>
+        ${MemoryComponent()}
       </section>
     </main>
     <dialog class="connection-form" id="connection-dialog">
