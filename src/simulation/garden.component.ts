@@ -36,8 +36,10 @@ const connectTool = tool({
     if (rockIndex !== -1 && rocks[rockIndex].userName === null) {
       rocks[rockIndex].userName = humanName;
       rocks$.next(rocks);
+      return `Connected human ${humanName} with rock ${rockName}`;
+    } else {
+      return `Rock ${rockName} is not available for adoption. Please choose another rock.`;
     }
-    return `Connected human ${humanName} with rock ${rockName}`;
   },
 });
 
