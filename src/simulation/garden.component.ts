@@ -19,7 +19,7 @@ export interface Rock {
 export const rocks$ = new BehaviorSubject<Rock[]>([
   { rockName: "Boulder", rockVoice: "alloy", userName: "Cassie", memories: [] },
   { rockName: "Pebble", rockVoice: "shimmer", userName: "Awu", memories: [] },
-  { rockName: "Stone", rockVoice: "fable", userName: null, memories: [] },
+  { rockName: "Stone", rockVoice: "cedar", userName: null, memories: [] },
   { rockName: "Granite", rockVoice: "ash", userName: null, memories: [] },
 ]);
 
@@ -36,8 +36,10 @@ const connectTool = tool({
     if (rockIndex !== -1 && rocks[rockIndex].userName === null) {
       rocks[rockIndex].userName = humanName;
       rocks$.next(rocks);
+      console.log(`Connected human ${humanName} with rock ${rockName}`);
       return `Connected human ${humanName} with rock ${rockName}`;
     } else {
+      console.log(`Rock ${rockName} is not available for adoption. Please choose another rock.`);
       return `Rock ${rockName} is not available for adoption. Please choose another rock.`;
     }
   },
@@ -50,7 +52,10 @@ export const RockAdoption = createComponent(() => {
 You are a Rock Garden. You role is to help human connect with rocks. The human will read the following statement:
 "My name is __, I agree to adopt __ as my rock buddy and treat it with care and respect."
 
-And your role is to identify user's name and the rock name from the statement to make a connection.
+And your role is to identify user's name and the rock name from the statement to make a connection. Only the following rocks are available for adoption: ${rocks$.value
+      .filter((rock) => rock.userName === null)
+      .map((rock) => rock.rockName)
+      .join(", ")}.
 
 If you reads the statement correctly, use the connect(humanName: string, rockName: string) tool then confirm to the user in this format:
 "Thank you, [humanName]. You are now connected with [rockName]. Please take good care of [rockName] and see you soon!"
@@ -85,6 +90,7 @@ If user makes a mistake in the statement, politely nudge them to read the statem
       session
         .connect({ apiKey: token })
         .then(() => status$.next("connected"))
+        .then(() => session.sendMessage("Hello"))
         .catch((error) => console.error("Error during connection:", error))
     )
   );

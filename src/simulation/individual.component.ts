@@ -45,9 +45,7 @@ You are bound to the human named ${props.humanName}. You are their rock buddy an
       session
         .connect({ apiKey: token })
         .then(() => status$.next("connected"))
-        .then(() => {
-          session.sendMessage(`I am, ${props.humanName}, I just joined`);
-        })
+        .then(() => session.sendMessage(`I am, ${props.humanName}, I just joined`))
         .catch((error) => console.error("Error during connection:", error))
     )
   );
