@@ -79,12 +79,6 @@ export const ConnectionsComponent = createComponent(() => {
     clearTestResults("openai");
   };
 
-  const handleGeminiChange = (e: Event) => {
-    const input = e.target as HTMLInputElement;
-    apiKeyChange$.next({ provider: "gemini", value: input.value });
-    clearTestResults("gemini");
-  };
-
   const handleTestSubmit = (e: Event) => {
     e.preventDefault();
 
@@ -131,32 +125,9 @@ export const ConnectionsComponent = createComponent(() => {
     )
   );
 
-  const geminiStatus$ = testLoading$.pipe(
-    mergeMap((loading) =>
-      testResults$.pipe(
-        mergeMap((results) =>
-          testErrors$.pipe(
-            mergeMap((errors) =>
-              apiKeys$.pipe(
-                map((apiKeys) => {
-                  if (!apiKeys.gemini) return "✗ Not set";
-                  if (loading.gemini) return "Testing...";
-                  if (errors.gemini) return `✗ ${errors.gemini}`;
-                  if (results.gemini) return `✓ ${results.gemini}`;
-                  return "✓ Set";
-                })
-              )
-            )
-          )
-        )
-      )
-    )
-  );
-
   const effects$ = merge(persistKeys$, handleTestConnection$).pipe(ignoreElements());
 
   const openaiApiKey$ = apiKeys$.pipe(map((apiKeys) => apiKeys.openai));
-  const geminiApiKey$ = apiKeys$.pipe(map((apiKeys) => apiKeys.gemini));
 
   // 4. Combine state and template
   const template = html`
@@ -166,17 +137,9 @@ export const ConnectionsComponent = createComponent(() => {
         <input id="openai-key" type="password" value=${observe(openaiApiKey$)} placeholder="sk-..." @input=${handleOpenAIChange} />
       </div>
 
-      <div class="form-field">
-        <label for="gemini-key">Gemini API Key</label>
-        <input id="gemini-key" type="password" value=${observe(geminiApiKey$)} placeholder="API key for Google Gemini" @input=${handleGeminiChange} />
-      </div>
-
       <button type="submit" ?disabled=${observe(isDisabled$)}>${observe(buttonText$)}</button>
 
-      <div class="form-status">
-        <small>OpenAI: ${observe(openaiStatus$)}</small><br />
-        <small>Gemini: ${observe(geminiStatus$)}</small>
-      </div>
+      <div class="form-status"><small>OpenAI: ${observe(openaiStatus$)}</small><br /></div>
     </form>
   `;
 
