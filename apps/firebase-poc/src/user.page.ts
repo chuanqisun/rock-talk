@@ -88,7 +88,6 @@ const UserPage = createComponent(() => {
     </header>
     <main>
       <section>
-        <h2>Chat with Rock Buddy</h2>
         <button @click=${() => (status$.value === "idle" ? start() : stop())}>${observe(connectButtonLabel$)}</button>
         <button @mousedown=${talkStart} @mouseup=${talkStop} ?disabled=${observe(status$.pipe(map((s) => s !== "connected")))}>
           ${observe(talkButtonLabel$)}
