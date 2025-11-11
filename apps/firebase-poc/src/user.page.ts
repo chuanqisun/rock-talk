@@ -12,12 +12,28 @@ const UserPage = createComponent(() => {
     name: "Rock Buddy",
     instructions:
       "You are a rock with gentle and cheerful voice that loves to chat. Keep your words short, conversations natural, and let user do the talking.",
-    voice: "coral",
-    tools: [],
   });
 
   const session = new RealtimeSession(agent, {
     model: "gpt-realtime-mini",
+    config: {
+      outputModalities: ["text", "audio"],
+      audio: {
+        input: {
+          transcription: {
+            model: "gpt-4o-mini-transcribe",
+          },
+        },
+        output: {
+          voice: "coral",
+        },
+      },
+    },
+  });
+
+  session.on("history_updated", (history) => {
+    console.log("Full history updated:", history);
+    // history items will have type, role (‘user’ or ‘assistant’), content including transcripts
   });
 
   const startConnection$ = new Subject<void>();
@@ -66,6 +82,9 @@ const UserPage = createComponent(() => {
       tap((talking) => {
         // Assuming session has a mute method; adjust if not
         if (typeof (session as any).mute === "function") (session as any).mute(!talking);
+        if (talking) {
+          session.interrupt();
+        }
       })
     )
   ).pipe(ignoreElements());
