@@ -1,0 +1,8 @@
+body {
+  font-family: system-ui, sans-serif;
+  font-weight: normal;
+}
+
+* {
+  box-sizing: border-box;
+}
