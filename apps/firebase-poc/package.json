@@ -14,5 +14,8 @@
     "openai": "^6.3.0",
     "rxjs": "^7.8.2",
     "zod": "^3.25.76"
+  },
+  "dependencies": {
+    "firebase": "^12.5.0"
   }
 }
