@@ -1,6 +1,6 @@
 import { RealtimeAgent, RealtimeSession } from "@openai/agents/realtime";
 import { html, render } from "lit-html";
-import { BehaviorSubject, catchError, EMPTY, ignoreElements, map, merge, mergeWith, of, Subject, switchMap, tap } from "rxjs";
+import { BehaviorSubject, catchError, combineLatest, EMPTY, ignoreElements, map, merge, mergeWith, of, scan, Subject, switchMap, tap } from "rxjs";
 import { apiKeys$, ConnectionsComponent } from "./connections/connections.component";
 import { getEphermeralToken$ } from "./openai/token";
 import { createComponent } from "./sdk/create-component";
@@ -8,7 +8,8 @@ import { observe } from "./sdk/observe-directive";
 import "./user.page.css";
 
 const UserPage = createComponent(() => {
-  const transcripts$ = new Subject<{ role: string; content: string }[]>();
+  const itemIds$ = new Subject<string[]>();
+  const transcript$ = new Subject<{ itemId: string; role: string; content: string }>();
 
   const agent = new RealtimeAgent({
     name: "Rock Buddy",
@@ -33,26 +34,29 @@ const UserPage = createComponent(() => {
     },
   });
 
-  // TODO correlate itemId in history and in events to establish ordering
-  session.on("history_updated", (history) => {
-    console.log("Full history updated:", history);
-    const transcript = history
-      .filter((entry) => entry.type === "message")
-      .map((message) => ({
-        role: message.role,
-        content: message.content.find((item) => item.type === "input_audio" || item.type === "output_audio")?.transcript ?? "...",
-      }));
-    transcripts$.next(transcript);
-  });
-
   session.on("transport_event", (e) => {
     if (e.type === "conversation.item.input_audio_transcription.completed") {
-      console.log("user", e);
+      transcript$.next({ itemId: e.item_id, role: "user", content: e.transcript });
     }
     if (e.type === "response.output_audio_transcript.done") {
-      console.log("ai:", e);
+      transcript$.next({ itemId: e.item_id, role: "model", content: e.transcript });
     }
   });
+
+  // ids update is guaranteed to happen after transcript events
+  session.on("history_updated", (history) => {
+    const ids = history.filter((entry) => entry.type === "message").map((message) => message.itemId);
+    itemIds$.next(ids);
+  });
+
+  const transcripts$ = transcript$.pipe(scan((acc, curr) => [...acc, curr], [] as { itemId: string; role: string; content: string }[]));
+
+  const orderedTranscripts$ = combineLatest([itemIds$, transcripts$]).pipe(
+    map(([ids, transcripts]) => {
+      return ids.map((id) => transcripts.find((t) => t.itemId === id)).filter((item) => !!item);
+    }),
+    tap((ordered) => console.log("ordered transcripts:", ordered))
+  );
 
   // (session as any).on("transport_event", (data: any) => {
   //   console.log("Transcription completed:", data);
@@ -88,6 +92,8 @@ const UserPage = createComponent(() => {
           },
         },
       });
+
+      await session.mute(true);
     })
   );
 
@@ -147,7 +153,7 @@ const UserPage = createComponent(() => {
       </section>
       <section>
         ${observe(
-          transcripts$.pipe(
+          orderedTranscripts$.pipe(
             map(
               (transcript) =>
                 html`<div class="transcript">
