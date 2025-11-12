@@ -8,6 +8,8 @@ import { observe } from "./sdk/observe-directive";
 import "./user.page.css";
 
 const UserPage = createComponent(() => {
+  const transcripts$ = new Subject<{ role: string; content: string }[]>();
+
   const agent = new RealtimeAgent({
     name: "Rock Buddy",
     instructions:
@@ -33,8 +35,27 @@ const UserPage = createComponent(() => {
 
   session.on("history_updated", (history) => {
     console.log("Full history updated:", history);
-    // history items will have type, role (‘user’ or ‘assistant’), content including transcripts
+    const transcript = history
+      .filter((entry) => entry.type === "message")
+      .map((message) => ({
+        role: message.role,
+        content: message.content.find((item) => item.type === "input_audio" || item.type === "output_audio")?.transcript ?? "...",
+      }));
+    transcripts$.next(transcript);
   });
+
+  session.on("transport_event", (e) => {
+    if (e.type === "conversation.item.input_audio_transcription.completed") {
+      console.log("user", e);
+    }
+    if (e.type === "response.output_audio_transcript.done") {
+      console.log("ai:", e);
+    }
+  });
+
+  // (session as any).on("transport_event", (data: any) => {
+  //   console.log("Transcription completed:", data);
+  // });
 
   const startConnection$ = new Subject<void>();
   const stopConnection$ = new Subject<void>();
@@ -50,12 +71,23 @@ const UserPage = createComponent(() => {
         model: "gpt-realtime-mini",
       })
     ),
-    switchMap((token) =>
-      session
+    switchMap(async (token) => {
+      await session
         .connect({ apiKey: token })
         .then(() => status$.next("connected"))
-        .catch((error) => console.error("Error during connection:", error))
-    )
+        .catch((error) => console.error("Error during connection:", error));
+
+      // there appears to be bug that requires manually updating the config to enable input transcription
+      await session.transport.updateSessionConfig({
+        audio: {
+          input: {
+            transcription: {
+              model: "gpt-4o-mini-transcribe",
+            },
+          },
+        },
+      });
+    })
   );
 
   const sessionsStop$ = stopConnection$.pipe(
@@ -111,6 +143,18 @@ const UserPage = createComponent(() => {
         <button @mousedown=${talkStart} @mouseup=${talkStop} ?disabled=${observe(status$.pipe(map((s) => s !== "connected")))}>
           ${observe(talkButtonLabel$)}
         </button>
+      </section>
+      <section>
+        ${observe(
+          transcripts$.pipe(
+            map(
+              (transcript) =>
+                html`<div class="transcript">
+                  ${transcript.map((entry) => html`<div class="transcript-entry"><strong>${entry.role}:</strong> ${entry.content}</div>`)}
+                </div>`
+            )
+          )
+        )}
       </section>
     </main>
     <dialog class="connection-form" id="connection-dialog">
