@@ -33,6 +33,7 @@ const UserPage = createComponent(() => {
     },
   });
 
+  // TODO correlate itemId in history and in events to establish ordering
   session.on("history_updated", (history) => {
     console.log("Full history updated:", history);
     const transcript = history
