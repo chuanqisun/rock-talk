@@ -2,7 +2,7 @@ import { html, render } from "lit-html";
 import { map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
 import { ConnectionsComponent } from "./connections/connections.component";
 import type { DbSession } from "./database/database";
-import { connectToDatabase, uploadSession } from "./database/database";
+import { db, uploadSession } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 import { useRockSession } from "./session/use-rock-session";
@@ -19,15 +19,6 @@ const UserPage = createComponent(() => {
 
   const talkStart = () => isTalking$.next(true);
   const talkStop = () => isTalking$.next(false);
-
-  const db = connectToDatabase({
-    apiKey: "AIzaSyBS4y25o2AFvS2BSRXUWwUrhtFRMrFK1XU",
-    authDomain: "rock-talk-by-media-lab.firebaseapp.com",
-    projectId: "rock-talk-by-media-lab",
-    storageBucket: "rock-talk-by-media-lab.firebasestorage.app",
-    messagingSenderId: "902150219310",
-    appId: "1:902150219310:web:d716cc3d2861fbd398a1bf",
-  });
 
   const connectButtonLabel$ = status$.pipe(
     map((state) => {
