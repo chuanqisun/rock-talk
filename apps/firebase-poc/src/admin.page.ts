@@ -4,7 +4,7 @@ import "./admin.page.css";
 import { signin, signout, useUser } from "./auth/auth";
 import { ConnectionsComponent } from "./connections/connections.component";
 import type { DbDevice } from "./database/database";
-import { db, observeDevices, setDevices } from "./database/database";
+import { db, observeDevices, setDevices, updateDeviceSystemPrompt } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
@@ -20,6 +20,9 @@ const AdminPage = createComponent(() => {
       sessions: [],
     }));
     await setDevices(db, devices);
+  };
+  const updateSystemPrompt = async (deviceId: number, systemPrompt: string) => {
+    await updateDeviceSystemPrompt(db, deviceId, systemPrompt);
   };
   const sessionClickEffect$ = sessionClick$.pipe(
     withLatestFrom(devices$),
@@ -83,6 +86,14 @@ const AdminPage = createComponent(() => {
                                   )}
                                 </ul>
                               `}
+                        </div>
+                        <div class="system-prompt">
+                          <label for="device-${device.id}">System Prompt:</label>
+                          <textarea
+                            id="device-${device.id}"
+                            .value=${device.systemPrompt}
+                            @input=${(e: Event) => updateSystemPrompt(device.id, (e.target as HTMLTextAreaElement).value)}
+                          ></textarea>
                         </div>
                       </div>
                     `

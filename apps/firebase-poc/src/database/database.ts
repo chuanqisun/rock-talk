@@ -128,10 +128,14 @@ export async function setDevices(db: Database, devices: DbDevice[]): Promise<voi
     const deviceData = {
       name: device.name,
       systemPrompt: device.systemPrompt,
-      sessions: {}
+      sessions: {},
     };
     await set(ref(db, `devices/${device.id}`), deviceData);
   }
+}
+
+export async function updateDeviceSystemPrompt(db: Database, deviceId: number, systemPrompt: string): Promise<void> {
+  await set(ref(db, `devices/${deviceId}/systemPrompt`), systemPrompt);
 }
 
 export const { db, app } = connectToDatabase({
