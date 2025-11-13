@@ -12,7 +12,17 @@ const deviceId = new URLSearchParams(location.search).get("rock");
 if (!deviceId) throw new Error("Device ID not specified in URL parameters.");
 
 const UserPage = createComponent(() => {
-  const { status$, isTalking$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useRockSession();
+  const { status$, isTalking$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useRockSession({
+    fetchConfig: async () => {
+      const deviceId = new URLSearchParams(location.search).get("rock");
+      if (!deviceId) throw new Error("Device ID not specified in URL parameters.");
+
+      const { get, ref } = await import("firebase/database");
+      const systemPromptRef = ref(db, `devices/${deviceId}/systemPrompt`);
+      const snapshot = await get(systemPromptRef);
+      return snapshot.val() || "";
+    },
+  });
 
   const start = () => startConnection$.next();
   const stop = () => stopConnection$.next();

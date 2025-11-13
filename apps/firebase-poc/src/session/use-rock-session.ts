@@ -3,14 +3,20 @@ import { BehaviorSubject, catchError, combineLatest, EMPTY, ignoreElements, map,
 import { apiKeys$ } from "../connections/connections.component";
 import { getEphermeralToken$ } from "../openai/token";
 
-export function useRockSession() {
+export interface Config {
+  instructions: string;
+}
+export interface RockSessionProps {
+  fetchConfig: () => Promise<string>;
+}
+export function useRockSession(props: RockSessionProps) {
   const itemIds$ = new Subject<string[]>();
   const transcript$ = new Subject<{ itemId: string; role: string; content: string }>();
 
   const agent = new RealtimeAgent({
     name: "Rock Buddy",
     instructions:
-      "You are a rock with gentle and cheerful voice that loves to chat. Keep your words short, conversations natural, and let user do the talking.",
+      "You are a talking rock but due to a system error, you have not been initialized to interact with the user yet. Decline all interactions and ask user to check with the Rock Talk project admin.",
   });
 
   const session = new RealtimeSession(agent, {
@@ -29,6 +35,12 @@ export function useRockSession() {
       },
     },
   });
+
+  async function updateInstruction(newInstruction: string) {
+    session.transport.updateSessionConfig({
+      instructions: newInstruction,
+    });
+  }
 
   session.on("transport_event", (e) => {
     if (e.type === "conversation.item.input_audio_transcription.completed") {
@@ -90,6 +102,15 @@ export function useRockSession() {
       });
 
       await session.mute(true);
+
+      // Fetch and update instructions
+      try {
+        const instructions = await props.fetchConfig();
+        console.log("Fetched instructions:", instructions);
+        await updateInstruction(instructions);
+      } catch (error) {
+        console.error("Error fetching config:", error);
+      }
     })
   );
 

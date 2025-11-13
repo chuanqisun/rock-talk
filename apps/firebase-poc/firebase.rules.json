@@ -10,6 +10,7 @@
           ".validate": "newData.isString()"
         },
         "systemPrompt": {
+          ".read": true,
           ".validate": "newData.isString()"
         },
         "sessions": {
