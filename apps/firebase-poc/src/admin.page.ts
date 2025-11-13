@@ -1,16 +1,15 @@
 import { html, render } from "lit-html";
 import { map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
 import "./admin.page.css";
+import { signin, signout, useUser } from "./auth/auth";
 import { ConnectionsComponent } from "./connections/connections.component";
 import { db, observeDevices } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
 const AdminPage = createComponent(() => {
-  // Subscribe to devices in real-time
+  const user$ = useUser();
   const devices$ = observeDevices(db).pipe(tap((devices) => console.log("Devices updated:", devices)));
-
-  // Handle session clicks
   const sessionClick$ = new Subject<{ deviceId: number; sessionIndex: number }>();
   const sessionClickEffect$ = sessionClick$.pipe(
     withLatestFrom(devices$),
@@ -28,10 +27,22 @@ const AdminPage = createComponent(() => {
     sessionClick$.next({ deviceId, sessionIndex });
   };
 
+  const signInButton = user$.pipe(
+    map((user) => {
+      if (user === undefined) return html`<button disabled>Authenticating...</button>`;
+      if (user === null) {
+        return html`<button @click=${signin}>Sign In</button>`;
+      } else {
+        return html`<button @click=${signout}>Sign Out</button>`;
+      }
+    })
+  );
+
   const template = html`
     <header class="app-header">
       <h1>Rock Talk Admin</h1>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
+      ${observe(signInButton)}
     </header>
     <main>
       <section>

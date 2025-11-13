@@ -30,8 +30,8 @@ export interface FirebaseConnection {
 export function connectToDatabase(config: FirebaseConnection) {
   // Initialize Firebase
   const app = initializeApp(config);
-  const database = getDatabase(app);
-  return database;
+  const db = getDatabase(app);
+  return { app, db };
 }
 
 export async function listDevices(db: Database): Promise<DbDevice[]> {
@@ -120,7 +120,7 @@ export async function uploadSession(db: Database, deviceId: number, session: DbS
   await set(newSessionRef, session);
 }
 
-export const db = connectToDatabase({
+export const { db, app } = connectToDatabase({
   apiKey: "AIzaSyBS4y25o2AFvS2BSRXUWwUrhtFRMrFK1XU",
   authDomain: "rock-talk-by-media-lab.firebaseapp.com",
   projectId: "rock-talk-by-media-lab",
