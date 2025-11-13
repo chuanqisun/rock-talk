@@ -68,7 +68,7 @@ const UserPage = createComponent(() => {
 
   const template = html`
     <header class="app-header">
-      <h1>Rock Talk User</h1>
+      <h1>Rock Talk</h1>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
     </header>
     <main>

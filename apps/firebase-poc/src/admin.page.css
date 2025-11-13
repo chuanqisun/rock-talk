@@ -1,1 +1,7 @@
 @import "./shared/prototype.css";
+
+textarea {
+  display: block;
+  field-sizing: content;
+  resize: none;
+}
