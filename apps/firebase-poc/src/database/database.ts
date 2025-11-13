@@ -138,6 +138,13 @@ export async function updateDeviceSystemPrompt(db: Database, deviceId: number, s
   await set(ref(db, `devices/${deviceId}/systemPrompt`), systemPrompt);
 }
 
+export async function fetchConfig(deviceId: string) {
+  const { get, ref } = await import("firebase/database");
+  const systemPromptRef = ref(db, `devices/${deviceId}/systemPrompt`);
+  const snapshot = await get(systemPromptRef);
+  return snapshot.val() || "";
+}
+
 export const { db, app } = connectToDatabase({
   apiKey: "AIzaSyBS4y25o2AFvS2BSRXUWwUrhtFRMrFK1XU",
   authDomain: "rock-talk-by-media-lab.firebaseapp.com",
