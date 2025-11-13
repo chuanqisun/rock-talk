@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 export interface DbDevice {
   id: number;
   name: string;
+  systemPrompt: string;
   sessions: DbSession[];
 }
 
@@ -59,7 +60,8 @@ export async function listDevices(db: Database): Promise<DbDevice[]> {
 
     devices.push({
       id: parseInt(deviceId),
-      name: deviceData.name || `Device ${deviceId}`,
+      name: deviceData.name ?? `Device ${deviceId}`,
+      systemPrompt: deviceData.systemPrompt ?? "",
       sessions,
     });
   }
@@ -89,14 +91,15 @@ export function observeDevices(db: Database): Observable<DbDevice[]> {
             for (const sessionData of Object.values(deviceData.sessions as Record<string, any>)) {
               sessions.push({
                 createdAt: sessionData.createdAt,
-                transcripts: sessionData.transcripts || [],
+                transcripts: sessionData.transcripts ?? [],
               });
             }
           }
 
           devices.push({
             id: parseInt(deviceId),
-            name: deviceData.name || `Device ${deviceId}`,
+            name: deviceData.name ?? `Device ${deviceId}`,
+            systemPrompt: deviceData.systemPrompt ?? "",
             sessions,
           });
         }
@@ -118,6 +121,17 @@ export async function uploadSession(db: Database, deviceId: number, session: DbS
   const sessionsRef = ref(db, `devices/${deviceId}/sessions`);
   const newSessionRef = push(sessionsRef);
   await set(newSessionRef, session);
+}
+
+export async function setDevices(db: Database, devices: DbDevice[]): Promise<void> {
+  for (const device of devices) {
+    const deviceData = {
+      name: device.name,
+      systemPrompt: device.systemPrompt,
+      sessions: {}
+    };
+    await set(ref(db, `devices/${device.id}`), deviceData);
+  }
 }
 
 export const { db, app } = connectToDatabase({

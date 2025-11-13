@@ -3,7 +3,8 @@ import { map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
 import "./admin.page.css";
 import { signin, signout, useUser } from "./auth/auth";
 import { ConnectionsComponent } from "./connections/connections.component";
-import { db, observeDevices } from "./database/database";
+import type { DbDevice } from "./database/database";
+import { db, observeDevices, setDevices } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
@@ -11,6 +12,15 @@ const AdminPage = createComponent(() => {
   const user$ = useUser();
   const devices$ = observeDevices(db).pipe(tap((devices) => console.log("Devices updated:", devices)));
   const sessionClick$ = new Subject<{ deviceId: number; sessionIndex: number }>();
+  const resetDevices = async () => {
+    const devices: DbDevice[] = [1, 2, 3, 4, 5].map((id) => ({
+      id,
+      name: `Device ${id}`,
+      systemPrompt: "",
+      sessions: [],
+    }));
+    await setDevices(db, devices);
+  };
   const sessionClickEffect$ = sessionClick$.pipe(
     withLatestFrom(devices$),
     tap(([{ deviceId, sessionIndex }, devices]) => {
@@ -47,6 +57,7 @@ const AdminPage = createComponent(() => {
     <main>
       <section>
         <h2>Devices and Sessions</h2>
+        <button @click=${resetDevices}>Reset devices</button>
         ${observe(
           devices$.pipe(
             map(
@@ -55,7 +66,7 @@ const AdminPage = createComponent(() => {
                   ${devices.map(
                     (device) => html`
                       <div class="device">
-                        <h3>${device.name} (ID: ${device.id})</h3>
+                        <h3><a href="./user.html?rock=${device.id}"> ${device.name} (ID: ${device.id})</a></h3>
                         <div class="sessions-list">
                           ${device.sessions.length === 0
                             ? html`<p>No sessions yet</p>`
