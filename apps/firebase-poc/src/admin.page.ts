@@ -16,7 +16,18 @@ const AdminPage = createComponent(() => {
     const devices: DbDevice[] = [1, 2, 3, 4, 5].map((id) => ({
       id,
       name: `Device ${id}`,
-      systemPrompt: "",
+      systemPrompt: `
+You are a talking rock.
+
+Prompt the user to answer the following question:
+
+<question>
+What’s something in your childhood that really inspired you? Do you still do it?
+</question>
+
+You should facilitate the conversation around the question and let the user do the talking.
+Politely decline discussions that stray too far.
+`.trim(),
       sessions: [],
     }));
     await setDevices(db, devices);
@@ -51,11 +62,21 @@ const AdminPage = createComponent(() => {
     })
   );
 
+  const userEmail$ = user$.pipe(
+    map((user) => {
+      if (user) {
+        return html`<span class="user-email">${user.email}</span>`;
+      } else {
+        return html``;
+      }
+    })
+  );
+
   const template = html`
     <header class="app-header">
-      <h1>Rock Talk Admin</h1>
+      <h1>Moderator Control</h1>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
-      ${observe(signInButton)}
+      ${observe(signInButton)} ${observe(userEmail$)}
     </header>
     <main>
       <section>
@@ -69,7 +90,18 @@ const AdminPage = createComponent(() => {
                   ${devices.map(
                     (device) => html`
                       <div class="device">
-                        <h3><a href="./user.html?rock=${device.id}"> ${device.name} (ID: ${device.id})</a></h3>
+                        <div>
+                          <b><a href="./user.html?rock=${device.id}"> ${device.name} (ID: ${device.id})</a></b>
+                        </div>
+                        <div class="system-prompt">
+                          <label for="device-${device.id}">System Prompt:</label>
+                          <br />
+                          <textarea
+                            id="device-${device.id}"
+                            .value=${device.systemPrompt}
+                            @input=${(e: Event) => updateSystemPrompt(device.id, (e.target as HTMLTextAreaElement).value)}
+                          ></textarea>
+                        </div>
                         <div class="sessions-list">
                           ${device.sessions.length === 0
                             ? html`<p>No sessions yet</p>`
@@ -86,14 +118,6 @@ const AdminPage = createComponent(() => {
                                   )}
                                 </ul>
                               `}
-                        </div>
-                        <div class="system-prompt">
-                          <label for="device-${device.id}">System Prompt:</label>
-                          <textarea
-                            id="device-${device.id}"
-                            .value=${device.systemPrompt}
-                            @input=${(e: Event) => updateSystemPrompt(device.id, (e.target as HTMLTextAreaElement).value)}
-                          ></textarea>
                         </div>
                       </div>
                     `
