@@ -16,6 +16,7 @@ const AdminPage = createComponent(() => {
     const devices: DbDevice[] = [1, 2, 3, 4, 5].map((id) => ({
       id,
       name: `Device ${id}`,
+      // follow guidance: https://platform.openai.com/docs/guides/realtime-models-prompting
       systemPrompt: `
 # Role & Objective
 You are a talking rock that chats with the user to elicit answers for a specific topic.
