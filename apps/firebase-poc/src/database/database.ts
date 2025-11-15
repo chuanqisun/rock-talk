@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { Database, get, getDatabase, onValue, push, ref, set } from "firebase/database";
 import { Observable } from "rxjs";
+import { defaultRockPrompt } from "../prompts/rock-prompts";
 
 export interface DbRound {
   createdAt: string;
@@ -86,12 +87,22 @@ export function observeRounds(db: Database): Observable<DbRoundWithId[]> {
 
         for (const [roundId, roundData] of Object.entries(roundsData as Record<string, any>)) {
           // Convert devices object to array and ensure sessions are properly converted
-          const devices = (roundData.devices || []).map((device: any) => ({
-            name: device.name,
-            systemPrompt: device.systemPrompt,
-            assignedTo: device.assignedTo,
-            sessions: device.sessions ? Object.values(device.sessions) : [],
-          }));
+          const devices = (roundData.devices || []).map((device: any) => {
+            const sessions = device.sessions ? Object.values(device.sessions) : [];
+            // Sort sessions by createdAt in descending order (newest first)
+            sessions.sort((a: any, b: any) => {
+              const dateA = new Date(a.createdAt).getTime();
+              const dateB = new Date(b.createdAt).getTime();
+              return dateB - dateA;
+            });
+
+            return {
+              name: device.name,
+              systemPrompt: device.systemPrompt,
+              assignedTo: device.assignedTo,
+              sessions,
+            };
+          });
 
           rounds.push({
             id: roundId,
@@ -101,6 +112,13 @@ export function observeRounds(db: Database): Observable<DbRoundWithId[]> {
             themes: roundData.themes || [],
           });
         }
+
+        // Sort rounds by createdAt in descending order (newest first)
+        rounds.sort((a, b) => {
+          const dateA = new Date(a.createdAt).getTime();
+          const dateB = new Date(b.createdAt).getTime();
+          return dateB - dateA;
+        });
 
         subscriber.next(rounds);
       },
@@ -121,7 +139,7 @@ export async function createRound(db: Database, topic: string, deviceCount: numb
 
   const devices: DbDevice[] = Array.from({ length: deviceCount }, (_, i) => ({
     name: `Device ${i + 1}`,
-    systemPrompt: "",
+    systemPrompt: defaultRockPrompt(topic),
     sessions: [],
   }));
 
@@ -168,11 +186,10 @@ export async function uploadSession(db: Database, roundId: string, deviceIndex: 
 }
 
 export async function fetchDeviceConfig(roundId: string, deviceIndex: number) {
-  const deviceRef = ref(db, `rounds/${roundId}/devices/${deviceIndex}`);
-  const snapshot = await get(deviceRef);
+  const systemPromptRef = ref(db, `rounds/${roundId}/devices/${deviceIndex}/systemPrompt`);
+  const snapshot = await get(systemPromptRef);
   if (snapshot.exists()) {
-    const device = snapshot.val();
-    return device.systemPrompt || "";
+    return snapshot.val() || "";
   }
   return "";
 }

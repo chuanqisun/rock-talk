@@ -13,7 +13,6 @@ const AdminPage = createComponent(() => {
   const user$ = useUser();
   const rounds$ = observeRounds(db);
   const selectedRoundId$ = new BehaviorSubject<string | null>(null);
-  const selectedDeviceIndex$ = new BehaviorSubject<{ roundId: string; deviceIndex: number } | null>(null);
   const generatingThemesFor$ = new BehaviorSubject<string | null>(null);
   const themesByRound$ = new BehaviorSubject<Record<string, string[]>>({});
 
@@ -197,8 +196,8 @@ const AdminPage = createComponent(() => {
       <section>
         <h2>Rounds</h2>
         ${observe(
-          combineLatest([rounds$, selectedRoundId$, selectedDeviceIndex$]).pipe(
-            map(([rounds, selectedRoundId, selectedDeviceIndex]) =>
+          combineLatest([rounds$, selectedRoundId$]).pipe(
+            map(([rounds, selectedRoundId]) =>
               rounds.length === 0
                 ? html`<p>No rounds yet. Create one above!</p>`
                 : html`
@@ -208,10 +207,7 @@ const AdminPage = createComponent(() => {
                         return html`
                           <div class="round-card">
                             <div class="round-header">
-                              <h3>
-                                Round ${index + 1}
-                                <small>${new Date(round.createdAt).toLocaleString()}</small>
-                              </h3>
+                              <h3>Round ${index + 1} ${new Date(round.createdAt).toLocaleString()}</h3>
                               <button @click=${() => selectedRoundId$.next(selectedRoundId === roundId ? null : roundId)}>
                                 ${selectedRoundId === roundId ? "Collapse" : "Expand"}
                               </button>
@@ -267,45 +263,15 @@ const AdminPage = createComponent(() => {
                                                 ></textarea>
                                               </div>
                                               <div>
-                                                <button
-                                                  @click=${() => {
-                                                    const isSelected =
-                                                      selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex;
-                                                    selectedDeviceIndex$.next(isSelected ? null : { roundId, deviceIndex });
-                                                  }}
+                                                <a
+                                                  href=${`data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(device.sessions, null, 2))}`}
+                                                  download="device-${deviceIndex}-transcripts.json"
                                                 >
-                                                  View Transcripts (${device.sessions?.length ?? 0} sessions)
-                                                </button>
+                                                  Download Transcripts (${device.sessions?.length ?? 0} sessions)
+                                                </a>
                                                 ${device.assignedTo ? html`<span>Assigned to: ${device.assignedTo}</span>` : ""}
                                                 <a href="./user.html?round=${roundId}&device=${deviceIndex}" target="_blank">Open User View</a>
                                               </div>
-                                              ${selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex
-                                                ? html`
-                                                    <div class="sessions-list">
-                                                      ${device.sessions?.length === 0
-                                                        ? html`<p>No sessions yet</p>`
-                                                        : html`
-                                                            ${device.sessions?.map(
-                                                              (session, sessionIndex) => html`
-                                                                <div class="session-card">
-                                                                  <h5>Session ${sessionIndex + 1} - ${new Date(session.createdAt).toLocaleString()}</h5>
-                                                                  <div class="transcripts">
-                                                                    ${session.transcripts?.map(
-                                                                      (transcript) => html`
-                                                                        <div class="transcript-entry ${transcript.role}">
-                                                                          <strong>${transcript.role}:</strong>
-                                                                          <span>${transcript.content}</span>
-                                                                        </div>
-                                                                      `
-                                                                    )}
-                                                                  </div>
-                                                                </div>
-                                                              `
-                                                            )}
-                                                          `}
-                                                    </div>
-                                                  `
-                                                : ""}
                                             </div>
                                           `
                                         )}

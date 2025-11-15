@@ -63,7 +63,7 @@ label {
 }
 
 .round-card {
-  padding: 1rem;
+  padding-block: 1rem;
 }
 
 .round-header {
@@ -76,11 +76,14 @@ label {
   display: flex;
   align-items: center;
   gap: 1rem;
+  font-size: inherit;
   margin: 0;
 }
 
 .round-details {
-  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+  padding-top: 0.5rem;
 }
 
 .devices-list {
@@ -88,42 +91,6 @@ label {
   flex-direction: column;
   gap: 1rem;
   margin-top: 1rem;
-}
-
-.sessions-list {
-  margin-top: 1rem;
-}
-
-.session-card {
-  margin-bottom: 2rem;
-}
-
-.transcripts {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-.transcript-entry {
-  padding: 0.5rem;
-}
-
-.transcript-entry.user {
-  margin-left: 1rem;
-  border-left: 3px solid;
-}
-
-.transcript-entry.model {
-  margin-right: 1rem;
-  border-right: 3px solid;
-}
-
-.transcript-entry strong {
-  display: block;
-  margin-bottom: 0.25rem;
-  text-transform: uppercase;
 }
 
 .connections-dialog-body {

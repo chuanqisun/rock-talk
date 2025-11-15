@@ -48,8 +48,8 @@ const UserPage = createComponent(() => {
 
   // Handle share logic with withLatestFrom
   const shareEffect$ = shareClick$.pipe(
-    withLatestFrom(orderedTranscripts$),
-    tap(async ([_, transcripts]) => {
+    withLatestFrom(orderedTranscripts$, status$),
+    tap(async ([_, transcripts, status]) => {
       if (transcripts.length === 0) return;
 
       const session: DbSession = {
@@ -63,6 +63,11 @@ const UserPage = createComponent(() => {
       try {
         await uploadSession(db, roundId!, parseInt(deviceIndex!), session);
         alert("Session shared successfully!");
+
+        // Disconnect after successful share
+        if (status === "connected") {
+          stopConnection$.next();
+        }
       } catch (error) {
         console.error("Error sharing session:", error);
         alert("Failed to share session. Please try again.");
