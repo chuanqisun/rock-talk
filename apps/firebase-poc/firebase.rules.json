@@ -1,25 +1,19 @@
 {
   "rules": {
-    "devices": {
-      ".read": "auth != null && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
-      ".write": false,
-      "$deviceId": {
-        ".read": "auth != null && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
-        ".write": "auth != null && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
-        "name": {
-          ".validate": "newData.isString()"
-        },
-        "systemPrompt": {
-          ".read": true,
-          ".validate": "newData.isString()"
-        },
-        "sessions": {
-          ".read": true,
-          ".write": true,
-          "$sessionId": {
-            "transcripts": {
-              ".write": true,
+    "rounds": {
+      ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      "$roundId": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        "devices": {
+          "$deviceIndex": {
+            "systemPrompt": {
               ".read": true
+            },
+            "sessions": {
+              ".read": true,
+              ".write": true
             }
           }
         }

@@ -2,18 +2,23 @@ import { html, render } from "lit-html";
 import { map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
 import { ConnectionsComponent } from "./connections/connections.component";
 import type { DbSession } from "./database/database";
-import { db, fetchConfig, uploadSession } from "./database/database";
+import { db, fetchDeviceConfig, uploadSession } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 import { useRockSession } from "./session/use-rock-session";
 import "./user.page.css";
 
-const deviceId = new URLSearchParams(location.search).get("rock");
-if (!deviceId) throw new Error("Device ID not specified in URL parameters.");
+const urlParams = new URLSearchParams(location.search);
+const roundId = urlParams.get("round");
+const deviceIndex = urlParams.get("device");
+
+if (!roundId || !deviceIndex) {
+  throw new Error("Round ID and Device Index must be specified in URL parameters (e.g., ?round=0&device=0)");
+}
 
 const UserPage = createComponent(() => {
   const { status$, isTalking$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useRockSession({
-    fetchConfig: () => fetchConfig(deviceId!),
+    fetchConfig: () => fetchDeviceConfig(roundId!, parseInt(deviceIndex!)),
   });
 
   const start = () => startConnection$.next();
@@ -56,7 +61,7 @@ const UserPage = createComponent(() => {
       };
 
       try {
-        await uploadSession(db, parseInt(deviceId), session);
+        await uploadSession(db, roundId!, parseInt(deviceIndex!), session);
         alert("Session shared successfully!");
       } catch (error) {
         console.error("Error sharing session:", error);
@@ -68,7 +73,7 @@ const UserPage = createComponent(() => {
 
   const template = html`
     <header class="app-header">
-      <h1>Rock Talk User</h1>
+      <h1>Rock Talk User - Round ${roundId}, Device ${deviceIndex}</h1>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
     </header>
     <main>
