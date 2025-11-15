@@ -85,11 +85,19 @@ export function observeRounds(db: Database): Observable<DbRoundWithId[]> {
         const rounds: DbRoundWithId[] = [];
 
         for (const [roundId, roundData] of Object.entries(roundsData as Record<string, any>)) {
+          // Convert devices object to array and ensure sessions are properly converted
+          const devices = (roundData.devices || []).map((device: any) => ({
+            name: device.name,
+            systemPrompt: device.systemPrompt,
+            assignedTo: device.assignedTo,
+            sessions: device.sessions ? Object.values(device.sessions) : [],
+          }));
+
           rounds.push({
             id: roundId,
             createdAt: roundData.createdAt,
             topic: roundData.topic,
-            devices: roundData.devices || [],
+            devices,
             themes: roundData.themes || [],
           });
         }
