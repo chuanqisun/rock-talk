@@ -11,7 +11,7 @@ const AdminPage = createComponent(() => {
   const user$ = useUser();
   const rounds$ = observeRounds(db);
   const selectedRoundId$ = new BehaviorSubject<string | null>(null);
-  const selectedDeviceIndex$ = new BehaviorSubject<number | null>(null);
+  const selectedDeviceIndex$ = new BehaviorSubject<{ roundId: string; deviceIndex: number } | null>(null);
 
   const createNewRound$ = new Subject<{ topic: string; deviceCount: number }>();
   const updateRoundTopic$ = new Subject<{ roundId: string; topic: string }>();
@@ -107,8 +107,8 @@ const AdminPage = createComponent(() => {
       <section>
         <h2>Rounds</h2>
         ${observe(
-          combineLatest([rounds$, selectedRoundId$]).pipe(
-            map(([rounds, selectedRoundId]) =>
+          combineLatest([rounds$, selectedRoundId$, selectedDeviceIndex$]).pipe(
+            map(([rounds, selectedRoundId, selectedDeviceIndex]) =>
               rounds.length === 0
                 ? html`<p>No rounds yet. Create one above!</p>`
                 : html`
@@ -142,77 +142,97 @@ const AdminPage = createComponent(() => {
                                           })}
                                       />
                                     </div>
-                                    <h4>Devices</h4>
-                                    <div class="devices-list">
-                                      ${round.devices?.map(
-                                        (device, deviceIndex) => html`
-                                          <div class="device-card">
-                                            <div class="form-field">
-                                              <label for="device-name-${roundId}-${deviceIndex}">Device Name:</label>
-                                              <input
-                                                type="text"
-                                                id="device-name-${roundId}-${deviceIndex}"
-                                                .value=${device.name}
-                                                @input=${(e: Event) =>
-                                                  updateDeviceName$.next({
-                                                    roundId,
-                                                    deviceIndex,
-                                                    name: (e.target as HTMLInputElement).value,
-                                                  })}
-                                              />
-                                            </div>
-                                            <div class="form-field">
-                                              <label for="device-prompt-${roundId}-${deviceIndex}">System Prompt:</label>
-                                              <textarea
-                                                id="device-prompt-${roundId}-${deviceIndex}"
-                                                .value=${device.systemPrompt}
-                                                placeholder="You are a happy rock..."
-                                                @input=${(e: Event) =>
-                                                  updateDeviceSystemPrompt$.next({
-                                                    roundId,
-                                                    deviceIndex,
-                                                    systemPrompt: (e.target as HTMLTextAreaElement).value,
-                                                  })}
-                                              ></textarea>
-                                            </div>
-                                            <div>
-                                              <button @click=${() => selectedDeviceIndex$.next(deviceIndex)}>
-                                                View Transcripts (${device.sessions?.length ?? 0} sessions)
-                                              </button>
-                                              ${device.assignedTo ? html`<span>Assigned to: ${device.assignedTo}</span>` : ""}
-                                              <a href="./user.html?round=${roundId}&device=${deviceIndex}" target="_blank">Open User View</a>
-                                            </div>
-                                            ${selectedDeviceIndex$.value === deviceIndex
-                                              ? html`
-                                                  <div class="sessions-list">
-                                                    ${device.sessions?.length === 0
-                                                      ? html`<p>No sessions yet</p>`
-                                                      : html`
-                                                          ${device.sessions?.map(
-                                                            (session, sessionIndex) => html`
-                                                              <div class="session-card">
-                                                                <h5>Session ${sessionIndex + 1} - ${new Date(session.createdAt).toLocaleString()}</h5>
-                                                                <div class="transcripts">
-                                                                  ${session.transcripts?.map(
-                                                                    (transcript) => html`
-                                                                      <div class="transcript-entry ${transcript.role}">
-                                                                        <strong>${transcript.role}:</strong>
-                                                                        <span>${transcript.content}</span>
-                                                                      </div>
-                                                                    `
-                                                                  )}
+                                    <details class="devices-details">
+                                      <summary>Devices</summary>
+                                      <div class="devices-list">
+                                        ${round.devices?.map(
+                                          (device, deviceIndex) => html`
+                                            <div class="device-card">
+                                              <div class="form-field">
+                                                <label for="device-name-${roundId}-${deviceIndex}">Device Name:</label>
+                                                <input
+                                                  type="text"
+                                                  id="device-name-${roundId}-${deviceIndex}"
+                                                  .value=${device.name}
+                                                  @input=${(e: Event) =>
+                                                    updateDeviceName$.next({
+                                                      roundId,
+                                                      deviceIndex,
+                                                      name: (e.target as HTMLInputElement).value,
+                                                    })}
+                                                />
+                                              </div>
+                                              <div class="form-field">
+                                                <label for="device-prompt-${roundId}-${deviceIndex}">System Prompt:</label>
+                                                <textarea
+                                                  id="device-prompt-${roundId}-${deviceIndex}"
+                                                  .value=${device.systemPrompt}
+                                                  placeholder="You are a happy rock..."
+                                                  @input=${(e: Event) =>
+                                                    updateDeviceSystemPrompt$.next({
+                                                      roundId,
+                                                      deviceIndex,
+                                                      systemPrompt: (e.target as HTMLTextAreaElement).value,
+                                                    })}
+                                                ></textarea>
+                                              </div>
+                                              <div>
+                                                <button
+                                                  @click=${() => {
+                                                    const isSelected =
+                                                      selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex;
+                                                    selectedDeviceIndex$.next(isSelected ? null : { roundId, deviceIndex });
+                                                  }}
+                                                >
+                                                  View Transcripts (${device.sessions?.length ?? 0} sessions)
+                                                </button>
+                                                ${device.assignedTo ? html`<span>Assigned to: ${device.assignedTo}</span>` : ""}
+                                                <a href="./user.html?round=${roundId}&device=${deviceIndex}" target="_blank">Open User View</a>
+                                              </div>
+                                              ${selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex
+                                                ? html`
+                                                    <div class="sessions-list">
+                                                      ${device.sessions?.length === 0
+                                                        ? html`<p>No sessions yet</p>`
+                                                        : html`
+                                                            ${device.sessions?.map(
+                                                              (session, sessionIndex) => html`
+                                                                <div class="session-card">
+                                                                  <h5>Session ${sessionIndex + 1} - ${new Date(session.createdAt).toLocaleString()}</h5>
+                                                                  <div class="transcripts">
+                                                                    ${session.transcripts?.map(
+                                                                      (transcript) => html`
+                                                                        <div class="transcript-entry ${transcript.role}">
+                                                                          <strong>${transcript.role}:</strong>
+                                                                          <span>${transcript.content}</span>
+                                                                        </div>
+                                                                      `
+                                                                    )}
+                                                                  </div>
                                                                 </div>
-                                                              </div>
-                                                            `
-                                                          )}
-                                                        `}
-                                                  </div>
-                                                `
-                                              : ""}
-                                          </div>
-                                        `
-                                      )}
-                                    </div>
+                                                              `
+                                                            )}
+                                                          `}
+                                                    </div>
+                                                  `
+                                                : ""}
+                                            </div>
+                                          `
+                                        )}
+                                      </div>
+                                    </details>
+                                    <details class="themes-details">
+                                      <summary>Themes</summary>
+                                      <div class="themes-list">
+                                        ${round.themes && round.themes.length > 0
+                                          ? html`
+                                              <ul>
+                                                ${round.themes.map((theme) => html`<li>${theme}</li>`)}
+                                              </ul>
+                                            `
+                                          : html`<p>No themes</p>`}
+                                      </div>
+                                    </details>
                                   </div>
                                 `
                               : ""}
