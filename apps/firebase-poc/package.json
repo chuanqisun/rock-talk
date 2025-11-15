@@ -16,6 +16,7 @@
     "zod": "^3.25.76"
   },
   "dependencies": {
+    "@streamparser/json": "^0.0.22",
     "firebase": "^12.5.0"
   }
 }

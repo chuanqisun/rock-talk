@@ -28,20 +28,20 @@ export const Counter = createComponent((props: { initial: number }) => {
     }),
     map(
       ({ count }) => html`
-        <div class="example-view">
+        <menu class="example-view">
           <h2>Counter Example</h2>
-          <div class="counter-display">
+          <menu class="counter-display">
             <span class="count-value">${count}</span>
-          </div>
+          </menu>
           <menu class="counter-controls">
             <button @click=${() => decrement$.next()}>-</button>
             <button @click=${() => increment$.next()}>+</button>
             <button @click=${() => reset$.next()}>Reset</button>
           </menu>
-        </div>
-      `,
+        </menu>
+      `
     ),
-    mergeWith(effects$),
+    mergeWith(effects$)
   );
 
   return template$;

@@ -137,7 +137,19 @@ export async function createRound(db: Database, topic: string, deviceCount: numb
 }
 
 export async function updateRound(db: Database, roundId: string, round: DbRound): Promise<void> {
-  await set(ref(db, `rounds/${roundId}`), round);
+  // Remove undefined values to prevent Firebase errors
+  const cleanRound = {
+    createdAt: round.createdAt,
+    topic: round.topic,
+    devices: round.devices?.map((device) => ({
+      name: device.name,
+      systemPrompt: device.systemPrompt,
+      ...(device.assignedTo && { assignedTo: device.assignedTo }),
+      sessions: device.sessions || [],
+    })),
+    themes: round.themes || [],
+  };
+  await set(ref(db, `rounds/${roundId}`), cleanRound);
 }
 
 export async function updateDeviceInRound(db: Database, roundId: string, deviceIndex: number, updates: Partial<DbDevice>): Promise<void> {
@@ -188,7 +200,22 @@ export async function getRound(db: Database, roundId: string): Promise<DbRound |
     return null;
   }
 
-  return snapshot.val();
+  const roundData = snapshot.val();
+
+  // Convert devices object to array and ensure sessions are properly converted
+  const devices = (roundData.devices || []).map((device: any) => ({
+    name: device.name,
+    systemPrompt: device.systemPrompt,
+    assignedTo: device.assignedTo,
+    sessions: device.sessions ? Object.values(device.sessions) : [],
+  }));
+
+  return {
+    createdAt: roundData.createdAt,
+    topic: roundData.topic,
+    devices,
+    themes: roundData.themes || [],
+  };
 }
 
 export function observeRound(db: Database, roundId: string): Observable<DbRound | null> {

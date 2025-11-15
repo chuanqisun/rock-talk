@@ -132,14 +132,14 @@ export const ConnectionsComponent = createComponent(() => {
   // 4. Combine state and template
   const template = html`
     <form class="connections-form" @submit=${handleTestSubmit}>
-      <div class="form-field">
+      <menu class="form-field">
         <label for="openai-key">OpenAI API Key</label>
         <input id="openai-key" type="password" value=${observe(openaiApiKey$)} placeholder="sk-..." @input=${handleOpenAIChange} />
-      </div>
+      </menu>
 
       <button type="submit" ?disabled=${observe(isDisabled$)}>${observe(buttonText$)}</button>
 
-      <div class="form-status"><small>OpenAI: ${observe(openaiStatus$)}</small><br /></div>
+      <menu class="form-status"><small>OpenAI: ${observe(openaiStatus$)}</small><br /></menu>
     </form>
   `;
 

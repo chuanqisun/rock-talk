@@ -18,3 +18,8 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+menu {
+  margin: 0;
+  padding: 0;
+}

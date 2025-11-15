@@ -18,7 +18,7 @@ export async function signin() {
       console.log({ user, token });
       return user;
     })
-    .catch((error) => {});
+    .catch((error) => console.error("Error during sign-in:", error));
 }
 
 export function signout() {

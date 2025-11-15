@@ -91,21 +91,21 @@ const UserPage = createComponent(() => {
           orderedTranscripts$.pipe(
             map(
               (transcript) =>
-                html`<div class="transcript">
-                  ${transcript.map((entry) => html`<div class="transcript-entry"><strong>${entry.role}:</strong> ${entry.content}</div>`)}
-                </div>`
+                html`<menu class="transcript">
+                  ${transcript.map((entry) => html`<menu class="transcript-entry"><strong>${entry.role}:</strong> ${entry.content}</menu>`)}
+                </menu>`
             )
           )
         )}
       </section>
     </main>
     <dialog class="connection-form" id="connection-dialog">
-      <div class="connections-dialog-body">
+      <menu class="connections-dialog-body">
         ${ConnectionsComponent()}
         <form method="dialog">
           <button>Close</button>
         </form>
-      </div>
+      </menu>
     </dialog>
   `;
 

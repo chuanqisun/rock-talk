@@ -32,12 +32,12 @@ jobs:
         run: |
           npm install
           npm run build
-        working-directory: apps/web-only
+        working-directory: apps/firebase-poc
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: "apps/web-only/dist"
+          path: "apps/firebase-poc/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

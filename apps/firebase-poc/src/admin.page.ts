@@ -1,9 +1,11 @@
 import { html, render } from "lit-html";
 import { BehaviorSubject, combineLatest, ignoreElements, map, merge, mergeWith, of, Subject, tap } from "rxjs";
+import { mergeMap } from "rxjs/operators";
 import "./admin.page.css";
 import { signin, signout, useUser } from "./auth/auth";
-import { ConnectionsComponent } from "./connections/connections.component";
+import { apiKeys$, ConnectionsComponent } from "./connections/connections.component";
 import { createRound, db, getRound, observeRounds, updateDeviceInRound, updateRound } from "./database/database";
+import { generateThemes } from "./moderator/generate-themes";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
@@ -12,11 +14,15 @@ const AdminPage = createComponent(() => {
   const rounds$ = observeRounds(db);
   const selectedRoundId$ = new BehaviorSubject<string | null>(null);
   const selectedDeviceIndex$ = new BehaviorSubject<{ roundId: string; deviceIndex: number } | null>(null);
+  const generatingThemesFor$ = new BehaviorSubject<string | null>(null);
+  const themesByRound$ = new BehaviorSubject<Record<string, string[]>>({});
 
   const createNewRound$ = new Subject<{ topic: string; deviceCount: number }>();
   const updateRoundTopic$ = new Subject<{ roundId: string; topic: string }>();
   const updateDeviceName$ = new Subject<{ roundId: string; deviceIndex: number; name: string }>();
   const updateDeviceSystemPrompt$ = new Subject<{ roundId: string; deviceIndex: number; systemPrompt: string }>();
+  const generateThemesForRound$ = new Subject<string>();
+  const deleteThemesForRound$ = new Subject<string>();
 
   const createNewRoundEffect$ = createNewRound$.pipe(
     tap(async ({ topic, deviceCount }) => {
@@ -45,6 +51,81 @@ const AdminPage = createComponent(() => {
     tap(async ({ roundId, deviceIndex, systemPrompt }) => {
       await updateDeviceInRound(db, roundId, deviceIndex, { systemPrompt });
     })
+  );
+
+  const generateThemesEffect$ = generateThemesForRound$.pipe(
+    tap((roundId) => {
+      generatingThemesFor$.next(roundId);
+    }),
+    mergeMap((roundId) => {
+      return new Promise<void>(async (resolve) => {
+        try {
+          const apiKey = apiKeys$.value.openai;
+          if (!apiKey) {
+            console.error("OpenAI API key not configured");
+            generatingThemesFor$.next(null);
+            resolve();
+            return;
+          }
+
+          const round = await getRound(db, roundId);
+          if (!round) {
+            console.error("Round not found");
+            generatingThemesFor$.next(null);
+            resolve();
+            return;
+          }
+
+          // Start with existing database themes and append new ones
+          const existingThemes = round.themes || [];
+          const currentThemes = [...existingThemes];
+
+          // Pass existing themes to avoid duplicates
+          generateThemes(round, apiKey, existingThemes).subscribe({
+            next: (theme) => {
+              const themeString = `${theme.theme}: ${theme.description}`;
+              currentThemes.push(themeString);
+              themesByRound$.next({
+                ...themesByRound$.value,
+                [roundId]: currentThemes,
+              });
+            },
+            complete: async () => {
+              // Save themes to database when all are collected (they're already appended)
+              round.themes = currentThemes;
+              await updateRound(db, roundId, round);
+              generatingThemesFor$.next(null);
+              resolve();
+            },
+            error: (error) => {
+              console.error("Error generating themes:", error);
+              generatingThemesFor$.next(null);
+              resolve();
+            },
+          });
+        } catch (error) {
+          console.error("Error in theme generation:", error);
+          generatingThemesFor$.next(null);
+          resolve();
+        }
+      });
+    }),
+    ignoreElements()
+  );
+
+  const deleteThemesEffect$ = deleteThemesForRound$.pipe(
+    tap(async (roundId) => {
+      const round = await getRound(db, roundId);
+      if (round) {
+        round.themes = [];
+        await updateRound(db, roundId, round);
+        themesByRound$.next({
+          ...themesByRound$.value,
+          [roundId]: [],
+        });
+      }
+    }),
+    ignoreElements()
   );
 
   const handleCreateRound = (e: Event) => {
@@ -80,26 +161,35 @@ const AdminPage = createComponent(() => {
     })
   );
 
-  const effects$ = merge(createNewRoundEffect$, updateRoundTopicEffect$, updateDeviceNameEffect$, updateDeviceSystemPromptEffect$).pipe(ignoreElements());
+  const effects$ = merge(
+    createNewRoundEffect$,
+    updateRoundTopicEffect$,
+    updateDeviceNameEffect$,
+    updateDeviceSystemPromptEffect$,
+    generateThemesEffect$,
+    deleteThemesEffect$
+  ).pipe(ignoreElements());
 
   const template = html`
     <header class="app-header">
       <h1>Rock Talk Moderator</h1>
-      <button commandfor="connection-dialog" command="show-modal">Setup</button>
-      ${observe(signInButton)} ${observe(userEmail$)}
+      <menu class="action-menu">
+        <button commandfor="connection-dialog" command="show-modal">Setup</button>
+        ${observe(signInButton)} ${observe(userEmail$)}
+      </menu>
     </header>
     <main>
       <section>
         <h2>Create New Round</h2>
         <form @submit=${handleCreateRound} class="create-round-form">
-          <div class="form-field">
+          <menu class="form-field">
             <label for="topic">Topic:</label>
             <input type="text" id="topic" name="topic" required placeholder="Enter discussion topic" />
-          </div>
-          <div class="form-field">
+          </menu>
+          <menu class="form-field">
             <label for="deviceCount">Number of Devices:</label>
             <input type="number" id="deviceCount" name="deviceCount" min="1" max="10" value="5" required />
-          </div>
+          </menu>
           <button type="submit">Create Round</button>
         </form>
       </section>
@@ -112,12 +202,12 @@ const AdminPage = createComponent(() => {
               rounds.length === 0
                 ? html`<p>No rounds yet. Create one above!</p>`
                 : html`
-                    <div class="rounds-list">
+                    <menu class="rounds-list">
                       ${rounds.map((round, index) => {
                         const roundId = round.id;
                         return html`
-                          <div class="round-card">
-                            <div class="round-header">
+                          <menu class="round-card">
+                            <menu class="round-header">
                               <h3>
                                 Round ${index + 1}
                                 <small>${new Date(round.createdAt).toLocaleString()}</small>
@@ -125,11 +215,11 @@ const AdminPage = createComponent(() => {
                               <button @click=${() => selectedRoundId$.next(selectedRoundId === roundId ? null : roundId)}>
                                 ${selectedRoundId === roundId ? "Collapse" : "Expand"}
                               </button>
-                            </div>
+                            </menu>
                             ${selectedRoundId === roundId
                               ? html`
-                                  <div class="round-details">
-                                    <div class="form-field">
+                                  <menu class="round-details">
+                                    <menu class="form-field">
                                       <label for="topic-${roundId}">Topic:</label>
                                       <input
                                         type="text"
@@ -141,14 +231,14 @@ const AdminPage = createComponent(() => {
                                             topic: (e.target as HTMLInputElement).value,
                                           })}
                                       />
-                                    </div>
+                                    </menu>
                                     <details class="devices-details">
                                       <summary>Devices</summary>
-                                      <div class="devices-list">
+                                      <menu class="devices-list">
                                         ${round.devices?.map(
                                           (device, deviceIndex) => html`
-                                            <div class="device-card">
-                                              <div class="form-field">
+                                            <menu class="device-card">
+                                              <menu class="form-field">
                                                 <label for="device-name-${roundId}-${deviceIndex}">Device Name:</label>
                                                 <input
                                                   type="text"
@@ -161,8 +251,8 @@ const AdminPage = createComponent(() => {
                                                       name: (e.target as HTMLInputElement).value,
                                                     })}
                                                 />
-                                              </div>
-                                              <div class="form-field">
+                                              </menu>
+                                              <menu class="form-field">
                                                 <label for="device-prompt-${roundId}-${deviceIndex}">System Prompt:</label>
                                                 <textarea
                                                   id="device-prompt-${roundId}-${deviceIndex}"
@@ -175,8 +265,8 @@ const AdminPage = createComponent(() => {
                                                       systemPrompt: (e.target as HTMLTextAreaElement).value,
                                                     })}
                                                 ></textarea>
-                                              </div>
-                                              <div>
+                                              </menu>
+                                              <menu>
                                                 <button
                                                   @click=${() => {
                                                     const isSelected =
@@ -188,58 +278,97 @@ const AdminPage = createComponent(() => {
                                                 </button>
                                                 ${device.assignedTo ? html`<span>Assigned to: ${device.assignedTo}</span>` : ""}
                                                 <a href="./user.html?round=${roundId}&device=${deviceIndex}" target="_blank">Open User View</a>
-                                              </div>
+                                              </menu>
                                               ${selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex
                                                 ? html`
-                                                    <div class="sessions-list">
+                                                    <menu class="sessions-list">
                                                       ${device.sessions?.length === 0
                                                         ? html`<p>No sessions yet</p>`
                                                         : html`
                                                             ${device.sessions?.map(
                                                               (session, sessionIndex) => html`
-                                                                <div class="session-card">
+                                                                <menu class="session-card">
                                                                   <h5>Session ${sessionIndex + 1} - ${new Date(session.createdAt).toLocaleString()}</h5>
-                                                                  <div class="transcripts">
+                                                                  <menu class="transcripts">
                                                                     ${session.transcripts?.map(
                                                                       (transcript) => html`
-                                                                        <div class="transcript-entry ${transcript.role}">
+                                                                        <menu class="transcript-entry ${transcript.role}">
                                                                           <strong>${transcript.role}:</strong>
                                                                           <span>${transcript.content}</span>
-                                                                        </div>
+                                                                        </menu>
                                                                       `
                                                                     )}
-                                                                  </div>
-                                                                </div>
+                                                                  </menu>
+                                                                </menu>
                                                               `
                                                             )}
                                                           `}
-                                                    </div>
+                                                    </menu>
                                                   `
                                                 : ""}
-                                            </div>
+                                            </menu>
                                           `
                                         )}
-                                      </div>
+                                      </menu>
                                     </details>
                                     <details class="themes-details">
                                       <summary>Themes</summary>
-                                      <div class="themes-list">
-                                        ${round.themes && round.themes.length > 0
-                                          ? html`
-                                              <ul>
-                                                ${round.themes.map((theme) => html`<li>${theme}</li>`)}
-                                              </ul>
-                                            `
-                                          : html`<p>No themes</p>`}
-                                      </div>
+                                      <menu class="themes-list">
+                                        <menu class="themes-controls">
+                                          <button
+                                            @click=${() => generateThemesForRound$.next(roundId)}
+                                            ?disabled=${observe(generatingThemesFor$.pipe(map((generating) => generating === roundId)))}
+                                          >
+                                            ${observe(
+                                              generatingThemesFor$.pipe(
+                                                map((generating) => (generating === roundId ? "Generating..." : "Generate More Themes"))
+                                              )
+                                            )}
+                                          </button>
+                                          <button
+                                            @click=${() => deleteThemesForRound$.next(roundId)}
+                                            class="delete-button"
+                                            ?disabled=${observe(
+                                              combineLatest([generatingThemesFor$, themesByRound$.asObservable()]).pipe(
+                                                map(([generating, themesByRound]) => {
+                                                  const streamingThemes = themesByRound[roundId] || [];
+                                                  const dbThemes = round.themes || [];
+                                                  const allThemes = streamingThemes.length > 0 ? streamingThemes : dbThemes;
+                                                  return generating === roundId || allThemes.length === 0;
+                                                })
+                                              )
+                                            )}
+                                          >
+                                            Delete All Themes
+                                          </button>
+                                        </menu>
+                                        ${observe(
+                                          combineLatest([generatingThemesFor$, themesByRound$.asObservable()]).pipe(
+                                            map(([generating, themesByRound]) => {
+                                              const streamingThemes = themesByRound[roundId] || [];
+                                              const dbThemes = round.themes || [];
+                                              const allThemes = streamingThemes.length > 0 ? streamingThemes : dbThemes;
+
+                                              return allThemes.length > 0
+                                                ? html`
+                                                    <ul>
+                                                      ${allThemes.map((theme) => html`<li>${theme}</li>`)}
+                                                      ${generating === roundId ? html`<li style="opacity: 0.6;"><em>Generating...</em></li>` : ""}
+                                                    </ul>
+                                                  `
+                                                : html`<p>No themes</p>`;
+                                            })
+                                          )
+                                        )}
+                                      </menu>
                                     </details>
-                                  </div>
+                                  </menu>
                                 `
                               : ""}
-                          </div>
+                          </menu>
                         `;
                       })}
-                    </div>
+                    </menu>
                   `
             )
           )
@@ -248,12 +377,12 @@ const AdminPage = createComponent(() => {
     </main>
 
     <dialog class="connection-form" id="connection-dialog">
-      <div class="connections-dialog-body">
+      <menu class="connections-dialog-body">
         ${ConnectionsComponent()}
         <form method="dialog">
           <button>Close</button>
         </form>
-      </div>
+      </menu>
     </dialog>
   `;
 
