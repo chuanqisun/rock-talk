@@ -1,7 +1,18 @@
 @import "./shared/prototype.css";
 
+.action-menu {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
 textarea {
   display: block;
   field-sizing: content;
   resize: none;
+}
+
+.form-field {
+  display: grid;
 }

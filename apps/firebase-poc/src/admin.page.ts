@@ -94,14 +94,16 @@ What’s something in your childhood that really inspired you? Do you still do i
 
   const template = html`
     <header class="app-header">
-      <h1>Moderator Control</h1>
+      <h1>Rock Talk Moderator</h1>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
       ${observe(signInButton)} ${observe(userEmail$)}
     </header>
     <main>
-      <section>
-        <h2>Devices and Sessions</h2>
+      <menu class="action-menu">
+        <button @click=${() => {}}>Synthesize</button>
         <button @click=${resetDevices}>Reset devices</button>
+      </menu>
+      <section>
         ${observe(
           devices$.pipe(
             map(
@@ -113,12 +115,12 @@ What’s something in your childhood that really inspired you? Do you still do i
                         <div>
                           <b><a href="./user.html?rock=${device.id}"> ${device.name} (ID: ${device.id})</a></b>
                         </div>
-                        <div class="system-prompt">
-                          <label for="device-${device.id}">System Prompt:</label>
-                          <br />
+                        <div class="form-field">
+                          <label class="visually-hidden" for="device-${device.id}">System Prompt:</label>
                           <textarea
                             id="device-${device.id}"
                             .value=${device.systemPrompt}
+                            placeholder="You are a happy rock..."
                             @input=${(e: Event) => updateSystemPrompt(device.id, (e.target as HTMLTextAreaElement).value)}
                           ></textarea>
                         </div>
