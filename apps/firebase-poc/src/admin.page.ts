@@ -202,12 +202,13 @@ const AdminPage = createComponent(() => {
                 ? html`<p>No rounds yet. Create one above!</p>`
                 : html`
                     <div class="rounds-list">
-                      ${rounds.map((round, index) => {
+                      ${rounds.map((round) => {
                         const roundId = round.id;
+                        const readableTimestamp = new Date(round.createdAt).toLocaleString();
                         return html`
                           <div class="round-card">
                             <div class="round-header">
-                              <h3>Round ${index + 1} ${new Date(round.createdAt).toLocaleString()}</h3>
+                              <h3>Round started at ${readableTimestamp}</h3>
                               <button @click=${() => selectedRoundId$.next(selectedRoundId === roundId ? null : roundId)}>
                                 ${selectedRoundId === roundId ? "Collapse" : "Expand"}
                               </button>
