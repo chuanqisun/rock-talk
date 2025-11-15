@@ -11,7 +11,16 @@ import { observe } from "./sdk/observe-directive";
 
 const AdminPage = createComponent(() => {
   const user$ = useUser();
-  const rounds$ = observeRounds(db);
+  const rounds$ = user$.pipe(
+    mergeMap((user) => {
+      // Only observe rounds when user is authenticated
+      if (user) {
+        return observeRounds(db);
+      }
+      // Return empty array when not authenticated
+      return of([]);
+    })
+  );
   const selectedRoundId$ = new BehaviorSubject<string | null>(null);
   const generatingThemesFor$ = new BehaviorSubject<string | null>(null);
   const themesByRound$ = new BehaviorSubject<Record<string, string[]>>({});
@@ -187,7 +196,7 @@ const AdminPage = createComponent(() => {
           </div>
           <div class="form-field">
             <label for="deviceCount">Number of Devices:</label>
-            <input type="number" id="deviceCount" name="deviceCount" min="1" max="10" value="5" required />
+            <input type="number" id="deviceCount" name="deviceCount" min="1" max="10" value="3" required />
           </div>
           <button type="submit">Create Round</button>
         </form>
