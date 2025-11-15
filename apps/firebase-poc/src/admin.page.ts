@@ -74,6 +74,7 @@ const AdminPage = createComponent(() => {
         <button @click=${resetDevices}>Reset devices</button>
       </menu>
       <section>
+        <h2>Devices</h2>
         ${observe(
           devices$.pipe(
             map(
@@ -93,6 +94,28 @@ const AdminPage = createComponent(() => {
                             placeholder="You are a happy rock..."
                             @input=${(e: Event) => updateSystemPrompt(device.id, (e.target as HTMLTextAreaElement).value)}
                           ></textarea>
+                        </div>
+                      </div>
+                    `
+                  )}
+                </div>
+              `
+            )
+          )
+        )}
+      </section>
+      <section>
+        <h2>Sessions</h2>
+        ${observe(
+          devices$.pipe(
+            map(
+              (devices) => html`
+                <div class="devices-list">
+                  ${devices.map(
+                    (device) => html`
+                      <div class="device">
+                        <div>
+                          <b><a href="./user.html?rock=${device.id}"> ${device.name} (ID: ${device.id})</a></b>
                         </div>
                         <div class="sessions-list">
                           ${device.sessions.length === 0
