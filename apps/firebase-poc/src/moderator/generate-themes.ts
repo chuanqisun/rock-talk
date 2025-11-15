@@ -56,9 +56,11 @@ export function generateThemes(round: DbRound, apiKey: string, existingThemes?: 
         const prompt = `
 Analyze the following transcriptions from multiple devices and identify common themes that emerge across the discussions.
 
+Current discussion topic: ${round.topic}
+
 ${deviceSummaries}
 ${existingThemesSection}
-Extract up to 5 common themes that appear across these transcriptions. Each theme should represent a pattern, topic, or concept that multiple participants discussed or implied. Generate NEW themes that are different from any already identified themes.
+Extract up to 5 common themes that appear across these transcriptions, keeping in mind the current topic of "${round.topic}". Each theme should represent a pattern, topic, or concept that multiple participants discussed or implied. Generate NEW themes that are different from any already identified themes.
 
 Respond in this JSON format:
 {

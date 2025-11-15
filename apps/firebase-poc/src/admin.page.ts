@@ -182,14 +182,14 @@ const AdminPage = createComponent(() => {
       <section>
         <h2>Create New Round</h2>
         <form @submit=${handleCreateRound} class="create-round-form">
-          <menu class="form-field">
+          <div class="form-field">
             <label for="topic">Topic:</label>
             <input type="text" id="topic" name="topic" required placeholder="Enter discussion topic" />
-          </menu>
-          <menu class="form-field">
+          </div>
+          <div class="form-field">
             <label for="deviceCount">Number of Devices:</label>
             <input type="number" id="deviceCount" name="deviceCount" min="1" max="10" value="5" required />
-          </menu>
+          </div>
           <button type="submit">Create Round</button>
         </form>
       </section>
@@ -202,12 +202,12 @@ const AdminPage = createComponent(() => {
               rounds.length === 0
                 ? html`<p>No rounds yet. Create one above!</p>`
                 : html`
-                    <menu class="rounds-list">
+                    <div class="rounds-list">
                       ${rounds.map((round, index) => {
                         const roundId = round.id;
                         return html`
-                          <menu class="round-card">
-                            <menu class="round-header">
+                          <div class="round-card">
+                            <div class="round-header">
                               <h3>
                                 Round ${index + 1}
                                 <small>${new Date(round.createdAt).toLocaleString()}</small>
@@ -215,11 +215,11 @@ const AdminPage = createComponent(() => {
                               <button @click=${() => selectedRoundId$.next(selectedRoundId === roundId ? null : roundId)}>
                                 ${selectedRoundId === roundId ? "Collapse" : "Expand"}
                               </button>
-                            </menu>
+                            </div>
                             ${selectedRoundId === roundId
                               ? html`
-                                  <menu class="round-details">
-                                    <menu class="form-field">
+                                  <div class="round-details">
+                                    <div class="form-field">
                                       <label for="topic-${roundId}">Topic:</label>
                                       <input
                                         type="text"
@@ -231,14 +231,14 @@ const AdminPage = createComponent(() => {
                                             topic: (e.target as HTMLInputElement).value,
                                           })}
                                       />
-                                    </menu>
+                                    </div>
                                     <details class="devices-details">
                                       <summary>Devices</summary>
-                                      <menu class="devices-list">
+                                      <div class="devices-list">
                                         ${round.devices?.map(
                                           (device, deviceIndex) => html`
-                                            <menu class="device-card">
-                                              <menu class="form-field">
+                                            <div class="device-card">
+                                              <div class="form-field">
                                                 <label for="device-name-${roundId}-${deviceIndex}">Device Name:</label>
                                                 <input
                                                   type="text"
@@ -251,8 +251,8 @@ const AdminPage = createComponent(() => {
                                                       name: (e.target as HTMLInputElement).value,
                                                     })}
                                                 />
-                                              </menu>
-                                              <menu class="form-field">
+                                              </div>
+                                              <div class="form-field">
                                                 <label for="device-prompt-${roundId}-${deviceIndex}">System Prompt:</label>
                                                 <textarea
                                                   id="device-prompt-${roundId}-${deviceIndex}"
@@ -265,8 +265,8 @@ const AdminPage = createComponent(() => {
                                                       systemPrompt: (e.target as HTMLTextAreaElement).value,
                                                     })}
                                                 ></textarea>
-                                              </menu>
-                                              <menu>
+                                              </div>
+                                              <div>
                                                 <button
                                                   @click=${() => {
                                                     const isSelected =
@@ -278,43 +278,43 @@ const AdminPage = createComponent(() => {
                                                 </button>
                                                 ${device.assignedTo ? html`<span>Assigned to: ${device.assignedTo}</span>` : ""}
                                                 <a href="./user.html?round=${roundId}&device=${deviceIndex}" target="_blank">Open User View</a>
-                                              </menu>
+                                              </div>
                                               ${selectedDeviceIndex?.roundId === roundId && selectedDeviceIndex?.deviceIndex === deviceIndex
                                                 ? html`
-                                                    <menu class="sessions-list">
+                                                    <div class="sessions-list">
                                                       ${device.sessions?.length === 0
                                                         ? html`<p>No sessions yet</p>`
                                                         : html`
                                                             ${device.sessions?.map(
                                                               (session, sessionIndex) => html`
-                                                                <menu class="session-card">
+                                                                <div class="session-card">
                                                                   <h5>Session ${sessionIndex + 1} - ${new Date(session.createdAt).toLocaleString()}</h5>
-                                                                  <menu class="transcripts">
+                                                                  <div class="transcripts">
                                                                     ${session.transcripts?.map(
                                                                       (transcript) => html`
-                                                                        <menu class="transcript-entry ${transcript.role}">
+                                                                        <div class="transcript-entry ${transcript.role}">
                                                                           <strong>${transcript.role}:</strong>
                                                                           <span>${transcript.content}</span>
-                                                                        </menu>
+                                                                        </div>
                                                                       `
                                                                     )}
-                                                                  </menu>
-                                                                </menu>
+                                                                  </div>
+                                                                </div>
                                                               `
                                                             )}
                                                           `}
-                                                    </menu>
+                                                    </div>
                                                   `
                                                 : ""}
-                                            </menu>
+                                            </div>
                                           `
                                         )}
-                                      </menu>
+                                      </div>
                                     </details>
                                     <details class="themes-details">
                                       <summary>Themes</summary>
-                                      <menu class="themes-list">
-                                        <menu class="themes-controls">
+                                      <div class="themes-list">
+                                        <div class="themes-controls">
                                           <button
                                             @click=${() => generateThemesForRound$.next(roundId)}
                                             ?disabled=${observe(generatingThemesFor$.pipe(map((generating) => generating === roundId)))}
@@ -341,7 +341,7 @@ const AdminPage = createComponent(() => {
                                           >
                                             Delete All Themes
                                           </button>
-                                        </menu>
+                                        </div>
                                         ${observe(
                                           combineLatest([generatingThemesFor$, themesByRound$.asObservable()]).pipe(
                                             map(([generating, themesByRound]) => {
@@ -360,15 +360,15 @@ const AdminPage = createComponent(() => {
                                             })
                                           )
                                         )}
-                                      </menu>
+                                      </div>
                                     </details>
-                                  </menu>
+                                  </div>
                                 `
                               : ""}
-                          </menu>
+                          </div>
                         `;
                       })}
-                    </menu>
+                    </div>
                   `
             )
           )
@@ -377,12 +377,12 @@ const AdminPage = createComponent(() => {
     </main>
 
     <dialog class="connection-form" id="connection-dialog">
-      <menu class="connections-dialog-body">
+      <div class="connections-dialog-body">
         ${ConnectionsComponent()}
         <form method="dialog">
           <button>Close</button>
         </form>
-      </menu>
+      </div>
     </dialog>
   `;
 

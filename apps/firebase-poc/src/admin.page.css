@@ -5,7 +5,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid;
+  padding-bottom: 2rem;
 }
 
 .action-menu {
@@ -63,7 +63,6 @@ label {
 }
 
 .round-card {
-  border: 1px solid;
   padding: 1rem;
 }
 
@@ -81,9 +80,7 @@ label {
 }
 
 .round-details {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid;
+  margin-top: 2rem;
 }
 
 .devices-list {
@@ -93,22 +90,12 @@ label {
   margin-top: 1rem;
 }
 
-.device-card {
-  border: 1px solid;
-  padding: 1rem;
-  margin-left: 1rem;
-}
-
 .sessions-list {
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid;
 }
 
 .session-card {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border: 1px solid;
+  margin-bottom: 2rem;
 }
 
 .transcripts {
@@ -147,8 +134,6 @@ label {
 
 .themes-list {
   margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid;
 }
 
 .themes-controls {
