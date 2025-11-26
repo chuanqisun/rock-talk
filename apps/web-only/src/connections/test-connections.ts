@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { from, Observable } from "rxjs";
+import { from, Observable, of } from "rxjs";
 import type { ApiKeys } from "./storage";
 
 export interface TestConnectionRequest {
@@ -37,6 +37,12 @@ export function testConnection({ provider, apiKeys }: TestConnectionRequest): Ob
         throw new Error("OpenAI API key is not set");
       }
       return testOpenAIConnection(apiKeys.openai);
+
+    case "together":
+      return of("Not implemented yet");
+
+    case "gemini":
+      return of("Not implemented yet");
 
     default:
       throw new Error(`Unknown provider: ${provider}`);
