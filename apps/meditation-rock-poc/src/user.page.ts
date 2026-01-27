@@ -1,5 +1,5 @@
 import { html, render } from "lit-html";
-import { BehaviorSubject, map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
+import { BehaviorSubject, combineLatest, map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
 import { apiKeys$, ConnectionsComponent } from "./connections/connections.component";
 import { db, fetchRockConfig, uploadSession } from "./database/database";
 import { createComponent } from "./sdk/create-component";
@@ -38,15 +38,21 @@ const UserPage = createComponent(() => {
 
   const hasTranscript$ = orderedTranscripts$.pipe(map((t) => t.length > 0));
   const hasMemories$ = memories$.pipe(map((memories) => memories.length > 0));
+  
+  // Combined observable for disable state of Anonymize button
+  const anonymizeDisabled$ = combineLatest([isAnonymizing$, hasTranscript$]).pipe(
+    map(([isAnonymizing, hasTranscript]) => isAnonymizing || !hasTranscript)
+  );
 
   const anonymizeClick$ = new Subject<void>();
   const submitClick$ = new Subject<void>();
 
-  // Handle anonymize logic
+  // Handle anonymize logic - prevent multiple simultaneous calls
   const anonymizeEffect$ = anonymizeClick$.pipe(
-    withLatestFrom(orderedTranscripts$),
-    tap(async ([_, transcript]) => {
-      if (transcript.length === 0) return;
+    withLatestFrom(orderedTranscripts$, isAnonymizing$),
+    tap(async ([_, transcript, isAlreadyAnonymizing]) => {
+      // Prevent concurrent anonymization calls
+      if (isAlreadyAnonymizing || transcript.length === 0) return;
 
       const apiKey = apiKeys$.value.openai;
       if (!apiKey) {
@@ -151,15 +157,7 @@ const UserPage = createComponent(() => {
           )}
         </div>
         <div class="buttons">
-          <button
-            @click=${() => anonymizeClick$.next()}
-            ?disabled=${observe(
-              isAnonymizing$.pipe(
-                mergeWith(hasTranscript$.pipe(map((has) => !has))),
-                map((v) => v)
-              )
-            )}
-          >
+          <button @click=${() => anonymizeClick$.next()} ?disabled=${observe(anonymizeDisabled$)}>
             ${observe(isAnonymizing$.pipe(map((a) => (a ? "Anonymizing..." : "Anonymize"))))}
           </button>
           <button @click=${() => submitClick$.next()} ?disabled=${observe(hasMemories$.pipe(map((has) => !has)))}>

@@ -54,6 +54,16 @@ Respond with a JSON object in this format:
     throw new Error("No text content from anonymization");
   }
 
-  const parsed = JSON.parse(textContent.text) as { memories: string[] };
+  let parsed: { memories: string[] };
+  try {
+    parsed = JSON.parse(textContent.text) as { memories: string[] };
+  } catch {
+    throw new Error("Failed to parse anonymization response as JSON");
+  }
+
+  if (!parsed.memories || !Array.isArray(parsed.memories)) {
+    throw new Error("Invalid response format: expected 'memories' array");
+  }
+
   return parsed.memories;
 }
