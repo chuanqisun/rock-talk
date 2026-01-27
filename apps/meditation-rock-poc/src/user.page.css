@@ -1,0 +1,153 @@
+@import "./shared/prototype.css";
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+main {
+  padding: 1rem;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+.meditation-status {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #e8f5e9, #f3e5f5);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.meditation-status h2 {
+  margin: 0 0 0.5rem 0;
+}
+
+.meditation-status p {
+  margin: 0;
+  color: #666;
+}
+
+.memories-section {
+  margin-top: 2rem;
+}
+
+.memories-section h2 {
+  margin-bottom: 1rem;
+}
+
+.memories-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.memories-list li {
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border-left: 4px solid #9c27b0;
+  margin-bottom: 0.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.transcript-section {
+  margin-top: 2rem;
+}
+
+.transcript {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.transcript-entry {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 4px;
+}
+
+.transcript-entry strong {
+  color: #673ab7;
+}
+
+.connections-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.session-info {
+  background: #f5f5f5;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.session-info p {
+  margin: 0.25rem 0;
+}
+
+.start-button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.start-button:hover {
+  background: #45a049;
+}
+
+.stop-button {
+  background: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.stop-button:hover {
+  background: #da190b;
+}
+
+.submit-button {
+  background: #9c27b0;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.talk-button {
+  background: #2196f3;
+  color: white;
+  border: none;
+  user-select: none;
+}
+
+.talk-button:active {
+  background: #1976d2;
+}
+
+.talk-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}

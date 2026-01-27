@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "rocks": {
+      ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      "$rockId": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        "systemPrompt": {
+          ".read": true
+        },
+        "sessions": {
+          ".read": true,
+          ".write": true
+        }
+      }
+    },
+    "rounds": {
+      ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      "$roundId": {
+        ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        "sessions": {
+          ".read": true,
+          ".write": true
+        }
+      }
+    },
+    "sessions": {
+      ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+      ".write": true
+    }
+  }
+}

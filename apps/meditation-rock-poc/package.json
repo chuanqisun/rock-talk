@@ -1,0 +1,23 @@
+{
+  "name": "meditation-rock-poc",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.2.2"
+  },
+  "dependencies": {
+    "@openai/agents": "^0.1.9",
+    "@streamparser/json": "^0.0.22",
+    "firebase": "^12.5.0",
+    "lit-html": "^3.3.1",
+    "openai": "^6.3.0",
+    "rxjs": "^7.8.2",
+    "zod": "^3.25.0"
+  }
+}
