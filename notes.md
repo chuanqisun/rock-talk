@@ -1,2 +1,0 @@
-- receive summary
-- suggested prompt for the discussion of the day
