@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run dev --workspace=apps/firebase-poc"
+    "dev": "npm run dev --workspace=apps/meditation-rock-poc"
   },
   "repository": {
     "type": "git",
