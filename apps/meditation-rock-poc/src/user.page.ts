@@ -1,9 +1,10 @@
 import { html, render } from "lit-html";
-import { map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
-import { ConnectionsComponent } from "./connections/connections.component";
+import { BehaviorSubject, map, mergeWith, of, Subject, tap, withLatestFrom } from "rxjs";
+import { apiKeys$, ConnectionsComponent } from "./connections/connections.component";
 import { db, fetchRockConfig, uploadSession } from "./database/database";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
+import { anonymizeTranscript } from "./session/anonymize-transcript";
 import { useMeditationSession } from "./session/use-meditation-session";
 import "./user.page.css";
 
@@ -16,50 +17,67 @@ if (!roundId || !rockId) {
 }
 
 const UserPage = createComponent(() => {
-  const { status$, isTalking$, orderedTranscripts$, memories$, startConnection$, stopConnection$, effects$ } =
-    useMeditationSession({
-      fetchConfig: () => fetchRockConfig(rockId!),
-    });
+  const { status$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useMeditationSession({
+    fetchConfig: () => fetchRockConfig(rockId!),
+  });
+
+  const memories$ = new BehaviorSubject<string[]>([]);
+  const isAnonymizing$ = new BehaviorSubject<boolean>(false);
 
   const start = () => startConnection$.next();
   const stop = () => stopConnection$.next();
 
-  const talkStart = () => isTalking$.next(true);
-  const talkStop = () => isTalking$.next(false);
-
   const connectButtonLabel$ = status$.pipe(
     map((state) => {
-      if (state === "idle") return "Start Meditation";
+      if (state === "idle") return "Start";
       if (state === "connecting") return "Connecting...";
-      if (state === "connected") return "End Meditation";
-      return "Start Meditation";
+      if (state === "connected") return "End";
+      return "Start";
     })
   );
 
-  const talkButtonLabel$ = isTalking$.pipe(map((talking) => (talking ? "Release to Send" : "Hold to Talk")));
-
+  const hasTranscript$ = orderedTranscripts$.pipe(map((t) => t.length > 0));
   const hasMemories$ = memories$.pipe(map((memories) => memories.length > 0));
 
+  const anonymizeClick$ = new Subject<void>();
   const submitClick$ = new Subject<void>();
 
-  const handleSubmit = () => {
-    submitClick$.next();
-  };
+  // Handle anonymize logic
+  const anonymizeEffect$ = anonymizeClick$.pipe(
+    withLatestFrom(orderedTranscripts$),
+    tap(async ([_, transcript]) => {
+      if (transcript.length === 0) return;
+
+      const apiKey = apiKeys$.value.openai;
+      if (!apiKey) {
+        alert("Please configure your OpenAI API key in Setup first.");
+        return;
+      }
+
+      isAnonymizing$.next(true);
+      try {
+        const anonymizedMemories = await anonymizeTranscript(transcript, apiKey);
+        memories$.next(anonymizedMemories);
+      } catch (error) {
+        console.error("Error anonymizing transcript:", error);
+        alert("Failed to anonymize transcript. Please try again.");
+      } finally {
+        isAnonymizing$.next(false);
+      }
+    }),
+    map(() => template)
+  );
 
   // Handle submit logic
   const submitEffect$ = submitClick$.pipe(
-    withLatestFrom(memories$, status$),
-    tap(async ([_, memories, status]) => {
+    withLatestFrom(memories$),
+    tap(async ([_, memories]) => {
       if (memories.length === 0) return;
 
       try {
         await uploadSession(db, roundId!, rockId!, memories);
-        alert("Meditation session submitted successfully! Thank you for sharing your experience.");
-
-        // Disconnect after successful submit
-        if (status === "connected") {
-          stopConnection$.next();
-        }
+        alert("Session submitted. Thank you.");
+        memories$.next([]);
       } catch (error) {
         console.error("Error submitting session:", error);
         alert("Failed to submit session. Please try again.");
@@ -69,107 +87,90 @@ const UserPage = createComponent(() => {
   );
 
   const template = html`
-    <header class="app-header">
-      <h1>🧘 Meditation Session</h1>
+    <header>
+      <span>Meditation Session</span>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
     </header>
+
     <main>
-      <div class="session-info">
-        <p><strong>Round:</strong> ${roundId}</p>
-        <p><strong>Rock:</strong> ${rockId}</p>
-      </div>
-
-      <div class="meditation-status">
-        <h2>
+      <section class="session-controls">
+        <div class="status">
           ${observe(
             status$.pipe(
               map((s) => {
-                if (s === "idle") return "🪨 Ready to Meditate";
-                if (s === "connecting") return "🔄 Connecting...";
-                if (s === "connected") return "🧘 Meditation in Progress";
-                return "🪨 Ready to Meditate";
+                if (s === "idle") return "Ready";
+                if (s === "connecting") return "Connecting...";
+                if (s === "connected") return "In session (speak freely)";
+                return "Ready";
               })
             )
           )}
-        </h2>
-        <p>
+        </div>
+        <div class="buttons">
+          <button
+            @click=${() => (status$.value === "idle" ? start() : stop())}
+            ?disabled=${observe(status$.pipe(map((s) => s === "connecting")))}
+          >
+            ${observe(connectButtonLabel$)}
+          </button>
+        </div>
+      </section>
+
+      <section class="transcript-section">
+        <label>Transcript</label>
+        <div class="transcript">
           ${observe(
-            status$.pipe(
-              map((s) => {
-                if (s === "idle") return "Click 'Start Meditation' to begin your session";
-                if (s === "connecting") return "Preparing your meditation space...";
-                if (s === "connected") return "Hold the Talk button to speak with your guru rock";
-                return "Click 'Start Meditation' to begin your session";
-              })
+            orderedTranscripts$.pipe(
+              map((transcript) =>
+                transcript.length > 0
+                  ? transcript.map(
+                      (entry) => html`<div class="entry"><b>${entry.role}:</b> ${entry.content}</div>`
+                    )
+                  : html`<div class="placeholder">Transcript will appear here...</div>`
+              )
             )
           )}
-        </p>
-      </div>
-
-      <section class="controls">
-        <button
-          class=${observe(status$.pipe(map((s) => (s === "connected" ? "stop-button" : "start-button"))))}
-          @click=${() => (status$.value === "idle" ? start() : stop())}
-          ?disabled=${observe(status$.pipe(map((s) => s === "connecting")))}
-        >
-          ${observe(connectButtonLabel$)}
-        </button>
-        <button
-          class="talk-button"
-          @mousedown=${talkStart}
-          @mouseup=${talkStop}
-          @mouseleave=${talkStop}
-          @touchstart=${talkStart}
-          @touchend=${talkStop}
-          ?disabled=${observe(status$.pipe(map((s) => s !== "connected")))}
-        >
-          ${observe(talkButtonLabel$)}
-        </button>
-        <button
-          class="submit-button"
-          @click=${handleSubmit}
-          ?disabled=${observe(hasMemories$.pipe(map((has) => !has)))}
-        >
-          Submit Session
-        </button>
+        </div>
       </section>
 
-      <section class="memories-section">
-        <h2>✨ Session Memories</h2>
-        ${observe(
-          memories$.pipe(
-            map((memories) =>
-              memories.length > 0
-                ? html`
-                    <ul class="memories-list">
-                      ${memories.map((memory) => html`<li>${memory}</li>`)}
-                    </ul>
-                  `
-                : html`<p>Memories will appear here as your meditation progresses...</p>`
+      <section class="memory-section">
+        <label>Anonymized Memory</label>
+        <div class="memory">
+          ${observe(
+            memories$.pipe(
+              map((memories) =>
+                memories.length > 0
+                  ? html`<ul>
+                      ${memories.map((m) => html`<li>${m}</li>`)}
+                    </ul>`
+                  : html`<div class="placeholder">
+                      Click "Anonymize" after ending session to generate memory.
+                    </div>`
+              )
             )
-          )
-        )}
+          )}
+        </div>
+        <div class="buttons">
+          <button
+            @click=${() => anonymizeClick$.next()}
+            ?disabled=${observe(
+              isAnonymizing$.pipe(
+                mergeWith(hasTranscript$.pipe(map((has) => !has))),
+                map((v) => v)
+              )
+            )}
+          >
+            ${observe(isAnonymizing$.pipe(map((a) => (a ? "Anonymizing..." : "Anonymize"))))}
+          </button>
+          <button @click=${() => submitClick$.next()} ?disabled=${observe(hasMemories$.pipe(map((has) => !has)))}>
+            Submit
+          </button>
+        </div>
       </section>
-
-      <details class="transcript-section">
-        <summary>Conversation Transcript</summary>
-        ${observe(
-          orderedTranscripts$.pipe(
-            map(
-              (transcript) =>
-                html`<div class="transcript">
-                  ${transcript.map(
-                    (entry) =>
-                      html`<div class="transcript-entry"><strong>${entry.role}:</strong> ${entry.content}</div>`
-                  )}
-                </div>`
-            )
-          )
-        )}
-      </details>
     </main>
-    <dialog class="connection-form" id="connection-dialog">
-      <div class="connections-dialog-body">
+
+    <dialog id="connection-dialog">
+      <div class="dialog-body">
         ${ConnectionsComponent()}
         <form method="dialog">
           <button>Close</button>
@@ -178,7 +179,7 @@ const UserPage = createComponent(() => {
     </dialog>
   `;
 
-  return of(template).pipe(mergeWith(effects$, submitEffect$));
+  return of(template).pipe(mergeWith(effects$, anonymizeEffect$, submitEffect$));
 });
 
 render(UserPage(), document.getElementById("app")!);
