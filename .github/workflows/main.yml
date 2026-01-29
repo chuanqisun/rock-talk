@@ -32,12 +32,12 @@ jobs:
         run: |
           npm install
           npm run build
-        working-directory: apps/firebase-poc
+        working-directory: apps/meditation-rock-poc
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: "apps/firebase-poc/dist"
+          path: "apps/meditation-rock-poc/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
