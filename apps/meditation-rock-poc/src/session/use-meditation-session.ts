@@ -18,7 +18,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
   });
 
   const session = new RealtimeSession(agent, {
-    model: "gpt-realtime-mini",
+    model: "gpt-realtime",
     config: {
       outputModalities: ["text", "audio"],
       turnDetection: {
@@ -110,6 +110,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
         const instructions = await props.fetchConfig();
         console.log("Fetched instructions:", instructions);
         await updateInstruction(instructions);
+        await session.sendMessage("(Speak slowly and calmly. Welcome the user to the session by asking them to take their seat.)");
       } catch (error) {
         console.error("Error fetching config:", error);
       }
