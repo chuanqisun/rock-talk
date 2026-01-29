@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { Database, get, getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 import { Observable } from "rxjs";
-import { defaultMeditationPrompt } from "../prompts/meditation-prompts";
+import { baseMeditationPrompt, formatPromptWithTopic } from "../prompts/meditation-prompts";
 
 // Data models based on system-design.md
 export interface DbRound {
@@ -97,7 +97,7 @@ export async function createRock(db: Database, name: string): Promise<string> {
 
   const rock: DbRock = {
     name,
-    systemPrompt: defaultMeditationPrompt(""),
+    systemPrompt: baseMeditationPrompt,
     createdAt: new Date().toISOString(),
     sessions: [],
   };
@@ -322,13 +322,20 @@ export function observeSessionsForRock(db: Database, rockId: string): Observable
 }
 
 // Fetch rock config (system prompt) for user session
-export async function fetchRockConfig(rockId: string): Promise<string> {
+// Fetches rock's base prompt and round's topic, combines them at runtime
+export async function fetchRockConfig(rockId: string, roundId: string): Promise<string> {
+  // Fetch the rock's base system prompt
   const rockRef = ref(db, `rocks/${rockId}/systemPrompt`);
-  const snapshot = await get(rockRef);
-  if (snapshot.exists()) {
-    return snapshot.val() || "";
-  }
-  return "";
+  const rockSnapshot = await get(rockRef);
+  const basePrompt = rockSnapshot.exists() ? rockSnapshot.val() || baseMeditationPrompt : baseMeditationPrompt;
+
+  // Fetch the round's topic
+  const roundRef = ref(db, `rounds/${roundId}/topic`);
+  const roundSnapshot = await get(roundRef);
+  const topic = roundSnapshot.exists() ? roundSnapshot.val() || "" : "";
+
+  // Combine the rock's prompt with the round's topic
+  return formatPromptWithTopic(basePrompt, topic);
 }
 
 // Firebase configuration - using same project as firebase-poc

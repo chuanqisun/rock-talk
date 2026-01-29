@@ -82,7 +82,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
       getEphermeralToken$({
         apiKey: apiKeys$.value.openai!,
         voice: "coral",
-        model: "gpt-realtime-mini",
+        model: "gpt-realtime",
       })
     ),
     switchMap(async (token) => {
@@ -110,7 +110,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
         const instructions = await props.fetchConfig();
         console.log("Fetched instructions:", instructions);
         await updateInstruction(instructions);
-        await session.sendMessage("(Speak slowly and calmly. Welcome the user to the session by asking them to take their seat.)");
+        await session.sendMessage("(Speak slowly and calmly. Welcome the user to the session by announcing the topic.)");
       } catch (error) {
         console.error("Error fetching config:", error);
       }

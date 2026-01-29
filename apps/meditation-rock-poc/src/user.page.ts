@@ -18,7 +18,7 @@ if (!roundId || !rockId) {
 
 const UserPage = createComponent(() => {
   const { status$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useMeditationSession({
-    fetchConfig: () => fetchRockConfig(rockId!),
+    fetchConfig: () => fetchRockConfig(rockId!, roundId!),
   });
 
   const memories$ = new BehaviorSubject<string[]>([]);
@@ -38,11 +38,9 @@ const UserPage = createComponent(() => {
 
   const hasTranscript$ = orderedTranscripts$.pipe(map((t) => t.length > 0));
   const hasMemories$ = memories$.pipe(map((memories) => memories.length > 0));
-  
+
   // Combined observable for disable state of Anonymize button
-  const anonymizeDisabled$ = combineLatest([isAnonymizing$, hasTranscript$]).pipe(
-    map(([isAnonymizing, hasTranscript]) => isAnonymizing || !hasTranscript)
-  );
+  const anonymizeDisabled$ = combineLatest([isAnonymizing$, hasTranscript$]).pipe(map(([isAnonymizing, hasTranscript]) => isAnonymizing || !hasTranscript));
 
   const anonymizeClick$ = new Subject<void>();
   const submitClick$ = new Subject<void>();
@@ -113,10 +111,7 @@ const UserPage = createComponent(() => {
           )}
         </div>
         <div class="buttons">
-          <button
-            @click=${() => (status$.value === "idle" ? start() : stop())}
-            ?disabled=${observe(status$.pipe(map((s) => s === "connecting")))}
-          >
+          <button @click=${() => (status$.value === "idle" ? start() : stop())} ?disabled=${observe(status$.pipe(map((s) => s === "connecting")))}>
             ${observe(connectButtonLabel$)}
           </button>
         </div>
@@ -129,9 +124,7 @@ const UserPage = createComponent(() => {
             orderedTranscripts$.pipe(
               map((transcript) =>
                 transcript.length > 0
-                  ? transcript.map(
-                      (entry) => html`<div class="entry"><b>${entry.role}:</b> ${entry.content}</div>`
-                    )
+                  ? transcript.map((entry) => html`<div class="entry"><b>${entry.role}:</b> ${entry.content}</div>`)
                   : html`<div class="placeholder">Transcript will appear here...</div>`
               )
             )
@@ -149,9 +142,7 @@ const UserPage = createComponent(() => {
                   ? html`<ul>
                       ${memories.map((m) => html`<li>${m}</li>`)}
                     </ul>`
-                  : html`<div class="placeholder">
-                      Click "Anonymize" after ending session to generate memory.
-                    </div>`
+                  : html`<div class="placeholder">Click "Anonymize" after ending session to generate memory.</div>`
               )
             )
           )}
@@ -160,9 +151,7 @@ const UserPage = createComponent(() => {
           <button @click=${() => anonymizeClick$.next()} ?disabled=${observe(anonymizeDisabled$)}>
             ${observe(isAnonymizing$.pipe(map((a) => (a ? "Anonymizing..." : "Anonymize"))))}
           </button>
-          <button @click=${() => submitClick$.next()} ?disabled=${observe(hasMemories$.pipe(map((has) => !has)))}>
-            Submit
-          </button>
+          <button @click=${() => submitClick$.next()} ?disabled=${observe(hasMemories$.pipe(map((has) => !has)))}>Submit</button>
         </div>
       </section>
     </main>

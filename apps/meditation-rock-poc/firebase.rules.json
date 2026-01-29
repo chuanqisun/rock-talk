@@ -21,6 +21,9 @@
       "$roundId": {
         ".read": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
         ".write": "auth != null && auth.token.email_verified == true && (auth.token.email.matches(/.*@mit\\.edu$/) || auth.token.email.matches(/.*@media\\.mit\\.edu$/))",
+        "topic": {
+          ".read": true
+        },
         "sessions": {
           ".read": true,
           ".write": true
