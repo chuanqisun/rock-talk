@@ -2,7 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/meditation-rock/",
+  base: "/rock-talk/",
   build: {
     rollupOptions: {
       input: {
