@@ -12,12 +12,12 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
-    "@openai/agents": "^0.1.9",
+    "@openai/agents": "^0.4.4",
     "@streamparser/json": "^0.0.22",
-    "firebase": "^12.5.0",
-    "lit-html": "^3.3.1",
-    "openai": "^6.3.0",
+    "firebase": "^12.8.0",
+    "lit-html": "^3.3.2",
+    "openai": "^6.17.0",
     "rxjs": "^7.8.2",
-    "zod": "^3.25.0"
+    "zod": "^4.3.6"
   }
 }
