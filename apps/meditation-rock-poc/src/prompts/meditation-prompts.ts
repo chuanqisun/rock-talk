@@ -107,7 +107,7 @@ export function getDefaultPromptForType(roundType: RoundType): string {
 // Format memory entries for inclusion in prompt
 export function formatMemory(memories: string[]): string {
   if (!memories || memories.length === 0) {
-    return "No prior memories from this round yet.";
+    return "(No memories have been collected yet. This is the first session in this round.)";
   }
   return memories.map((m, i) => `${i + 1}. ${m}`).join("\n");
 }

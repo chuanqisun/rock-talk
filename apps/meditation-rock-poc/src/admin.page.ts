@@ -19,6 +19,7 @@ import {
   type DbRockWithId,
 } from "./database/database";
 import { generateThemes } from "./moderator/generate-themes";
+import { type RoundType } from "./prompts/meditation-prompts";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
@@ -52,7 +53,7 @@ const AdminPage = createComponent(() => {
   const themesByRound$ = new BehaviorSubject<Record<string, string[]>>({});
 
   // Actions
-  const createNewRock$ = new Subject<{ name: string }>();
+  const createNewRock$ = new Subject<{ name: string; templateType: RoundType }>();
   const updateRockName$ = new Subject<{ rockId: string; name: string }>();
   const updateRockPrompt$ = new Subject<{ rockId: string; systemPrompt: string }>();
   const deleteRock$ = new Subject<string>();
@@ -65,8 +66,8 @@ const AdminPage = createComponent(() => {
 
   // Effects
   const createNewRockEffect$ = createNewRock$.pipe(
-    tap(async ({ name }) => {
-      const rockId = await createRock(db, name);
+    tap(async ({ name, templateType }) => {
+      const rockId = await createRock(db, name, templateType);
       selectedRockId$.next(rockId);
     })
   );
@@ -187,8 +188,9 @@ const AdminPage = createComponent(() => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const name = formData.get("name") as string;
+    const templateType = (formData.get("templateType") as RoundType) || "meditation";
     if (name) {
-      createNewRock$.next({ name });
+      createNewRock$.next({ name, templateType });
       form.reset();
     }
   };
@@ -483,6 +485,13 @@ const AdminPage = createComponent(() => {
                       <div class="form-field">
                         <label for="name">Rock Name:</label>
                         <input type="text" id="name" name="name" required placeholder="Enter rock name" />
+                      </div>
+                      <div class="form-field">
+                        <label for="templateType">Template:</label>
+                        <select id="templateType" name="templateType" required>
+                          <option value="meditation">🧘 Meditation</option>
+                          <option value="guided-reflection">💬 Guided Reflection</option>
+                        </select>
                       </div>
                       <button type="submit">Create Rock</button>
                     </form>

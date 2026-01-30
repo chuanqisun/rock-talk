@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { Database, get, getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 import { Observable } from "rxjs";
-import { baseMeditationPrompt, formatPrompt } from "../prompts/meditation-prompts";
+import { baseMeditationPrompt, formatPrompt, getDefaultPromptForType, type RoundType } from "../prompts/meditation-prompts";
 
 // Data models based on system-design.md
 export interface DbRound {
@@ -91,13 +91,13 @@ export function observeRocks(db: Database): Observable<DbRockWithId[]> {
   });
 }
 
-export async function createRock(db: Database, name: string): Promise<string> {
+export async function createRock(db: Database, name: string, templateType: RoundType = "meditation"): Promise<string> {
   const rocksRef = ref(db, "rocks");
   const newRockRef = push(rocksRef);
 
   const rock: DbRock = {
     name,
-    systemPrompt: baseMeditationPrompt,
+    systemPrompt: getDefaultPromptForType(templateType),
     createdAt: new Date().toISOString(),
     sessions: [],
   };
