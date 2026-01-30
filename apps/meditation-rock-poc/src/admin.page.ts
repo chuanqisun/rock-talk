@@ -19,6 +19,7 @@ import {
   type DbRockWithId,
 } from "./database/database";
 import { generateThemes } from "./moderator/generate-themes";
+import { type RoundType } from "./prompts/meditation-prompts";
 import { createComponent } from "./sdk/create-component";
 import { observe } from "./sdk/observe-directive";
 
@@ -57,7 +58,7 @@ const AdminPage = createComponent(() => {
   const updateRockPrompt$ = new Subject<{ rockId: string; systemPrompt: string }>();
   const deleteRock$ = new Subject<string>();
 
-  const createNewRound$ = new Subject<{ topic: string }>();
+  const createNewRound$ = new Subject<{ topic: string; roundType: RoundType }>();
   const updateRoundTopic$ = new Subject<{ roundId: string; topic: string }>();
   const deleteRound$ = new Subject<string>();
   const generateThemesForRound$ = new Subject<string>();
@@ -93,8 +94,8 @@ const AdminPage = createComponent(() => {
   );
 
   const createNewRoundEffect$ = createNewRound$.pipe(
-    tap(async ({ topic }) => {
-      const roundId = await createRound(db, topic);
+    tap(async ({ topic, roundType }) => {
+      const roundId = await createRound(db, topic, roundType);
       selectedRoundId$.next(roundId);
     })
   );
@@ -198,8 +199,9 @@ const AdminPage = createComponent(() => {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const topic = formData.get("topic") as string;
+    const roundType = (formData.get("roundType") as RoundType) || "meditation";
     if (topic) {
-      createNewRound$.next({ topic });
+      createNewRound$.next({ topic, roundType });
       form.reset();
     }
   };
@@ -316,6 +318,14 @@ const AdminPage = createComponent(() => {
       return html`<p>No rounds yet. Create one above!</p>`;
     }
 
+    const getRoundTypeIcon = (roundType?: string) => {
+      return roundType === "guided-reflection" ? "💬" : "🧘";
+    };
+
+    const getRoundTypeLabel = (roundType?: string) => {
+      return roundType === "guided-reflection" ? "Guided Reflection" : "Meditation";
+    };
+
     return html`
       <div class="items-list">
         ${rounds.map((round) => {
@@ -323,7 +333,7 @@ const AdminPage = createComponent(() => {
           return html`
             <div class="item-card">
               <div class="item-header">
-                <h3>📿 ${round.topic}</h3>
+                <h3>${getRoundTypeIcon(round.roundType)} ${round.topic}</h3>
                 <div>
                   <button @click=${() => selectedRoundId$.next(isSelected ? null : round.id)}>
                     ${isSelected ? "Collapse" : "Expand"}
@@ -334,6 +344,10 @@ const AdminPage = createComponent(() => {
               ${isSelected
                 ? html`
                     <div class="item-details">
+                      <div class="form-field">
+                        <label>Type:</label>
+                        <span>${getRoundTypeLabel(round.roundType)}</span>
+                      </div>
                       <div class="form-field">
                         <label for="round-topic-${round.id}">Topic:</label>
                         <input
@@ -502,8 +516,15 @@ const AdminPage = createComponent(() => {
                     <h2>Create New Round</h2>
                     <form @submit=${handleCreateRound} class="create-form">
                       <div class="form-field">
+                        <label for="roundType">Round Type:</label>
+                        <select id="roundType" name="roundType" required>
+                          <option value="meditation">🧘 Meditation</option>
+                          <option value="guided-reflection">💬 Guided Reflection</option>
+                        </select>
+                      </div>
+                      <div class="form-field">
                         <label for="topic">Topic:</label>
-                        <input type="text" id="topic" name="topic" required placeholder="Enter meditation topic" />
+                        <input type="text" id="topic" name="topic" required placeholder="Enter topic" />
                       </div>
                       <button type="submit">Create Round</button>
                     </form>

@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { Database, get, getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 import { Observable } from "rxjs";
-import { baseMeditationPrompt, formatPrompt } from "../prompts/meditation-prompts";
+import { baseMeditationPrompt, formatPrompt, getDefaultPromptForType, type RoundType } from "../prompts/meditation-prompts";
 
 // Data models based on system-design.md
 export interface DbRound {
@@ -11,6 +11,7 @@ export interface DbRound {
   createdAt: string;
   sessions?: DbSession[];
   themes?: string[];
+  roundType?: RoundType;
 }
 
 export interface DbRock {
@@ -158,6 +159,7 @@ export function observeRounds(db: Database): Observable<DbRoundWithId[]> {
             createdAt: roundData.createdAt,
             sessions: roundData.sessions ? Object.values(roundData.sessions) : [],
             themes: roundData.themes || [],
+            roundType: roundData.roundType || "meditation",
           });
         }
 
@@ -177,7 +179,7 @@ export function observeRounds(db: Database): Observable<DbRoundWithId[]> {
   });
 }
 
-export async function createRound(db: Database, topic: string): Promise<string> {
+export async function createRound(db: Database, topic: string, roundType: RoundType = "meditation"): Promise<string> {
   const roundsRef = ref(db, "rounds");
   const newRoundRef = push(roundsRef);
 
@@ -187,6 +189,7 @@ export async function createRound(db: Database, topic: string): Promise<string> 
     createdAt: new Date().toISOString(),
     sessions: [],
     themes: [],
+    roundType,
   };
 
   await set(newRoundRef, round);
@@ -218,6 +221,7 @@ export async function getRound(db: Database, roundId: string): Promise<DbRound |
     ...roundData,
     sessions: roundData.sessions ? Object.values(roundData.sessions) : [],
     themes: roundData.themes || [],
+    roundType: roundData.roundType || "meditation",
   };
 }
 
@@ -322,17 +326,20 @@ export function observeSessionsForRock(db: Database, rockId: string): Observable
 }
 
 // Fetch rock config (system prompt) for user session
-// Fetches rock's base prompt, round's topic, and past memories from the round
+// Fetches rock's base prompt, round's topic, round type, and past memories from the round
 export async function fetchRockConfig(rockId: string, roundId: string): Promise<string> {
-  // Fetch the rock's base system prompt
+  // Fetch the round data (topic and roundType)
+  const roundRef = ref(db, `rounds/${roundId}`);
+  const roundSnapshot = await get(roundRef);
+  const roundData = roundSnapshot.exists() ? roundSnapshot.val() : {};
+  const topic = roundData.topic || "";
+  const roundType: RoundType = roundData.roundType || "meditation";
+
+  // Fetch the rock's base system prompt, or use the default for the round type
   const rockRef = ref(db, `rocks/${rockId}/systemPrompt`);
   const rockSnapshot = await get(rockRef);
-  const basePrompt = rockSnapshot.exists() ? rockSnapshot.val() || baseMeditationPrompt : baseMeditationPrompt;
-
-  // Fetch the round's topic
-  const roundRef = ref(db, `rounds/${roundId}/topic`);
-  const roundSnapshot = await get(roundRef);
-  const topic = roundSnapshot.exists() ? roundSnapshot.val() || "" : "";
+  const defaultPrompt = getDefaultPromptForType(roundType);
+  const basePrompt = rockSnapshot.exists() ? rockSnapshot.val() || defaultPrompt : defaultPrompt;
 
   // Fetch all past memories from sessions in the same round
   const sessionsRef = ref(db, `rounds/${roundId}/sessions`);
