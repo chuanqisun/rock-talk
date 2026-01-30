@@ -16,6 +16,25 @@ if (!roundId || !rockId) {
   throw new Error("Round ID and Rock ID must be specified in URL parameters (e.g., ?round=xxx&rock=yyy)");
 }
 
+// Helper function to download transcript as JSON
+function downloadTranscriptAsJson(transcript: { itemId: string; role: string; content: string }[]) {
+  const data = {
+    roundId,
+    rockId,
+    timestamp: new Date().toISOString(),
+    transcript: transcript.map(({ role, content }) => ({ role, content })),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `transcript-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 const UserPage = createComponent(() => {
   const { status$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useMeditationSession({
     fetchConfig: () => fetchRockConfig(rockId!, roundId!),
@@ -44,6 +63,17 @@ const UserPage = createComponent(() => {
 
   const anonymizeClick$ = new Subject<void>();
   const submitClick$ = new Subject<void>();
+  const downloadClick$ = new Subject<void>();
+
+  // Handle download logic
+  const downloadEffect$ = downloadClick$.pipe(
+    withLatestFrom(orderedTranscripts$),
+    tap(([_, transcript]) => {
+      if (transcript.length === 0) return;
+      downloadTranscriptAsJson(transcript);
+    }),
+    map(() => template)
+  );
 
   // Handle anonymize logic - prevent multiple simultaneous calls
   const anonymizeEffect$ = anonymizeClick$.pipe(
@@ -130,6 +160,11 @@ const UserPage = createComponent(() => {
             )
           )}
         </div>
+        <div class="buttons">
+          <button @click=${() => downloadClick$.next()} ?disabled=${observe(hasTranscript$.pipe(map((has) => !has)))}>
+            Download JSON
+          </button>
+        </div>
       </section>
 
       <section class="memory-section">
@@ -166,7 +201,7 @@ const UserPage = createComponent(() => {
     </dialog>
   `;
 
-  return of(template).pipe(mergeWith(effects$, anonymizeEffect$, submitEffect$));
+  return of(template).pipe(mergeWith(effects$, anonymizeEffect$, submitEffect$, downloadEffect$));
 });
 
 render(UserPage(), document.getElementById("app")!);
