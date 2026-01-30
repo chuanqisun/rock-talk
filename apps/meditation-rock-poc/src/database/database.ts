@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { Database, get, getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 import { Observable } from "rxjs";
-import { baseMeditationPrompt, formatPromptWithTopic } from "../prompts/meditation-prompts";
+import { baseMeditationPrompt, formatPrompt } from "../prompts/meditation-prompts";
 
 // Data models based on system-design.md
 export interface DbRound {
@@ -322,7 +322,7 @@ export function observeSessionsForRock(db: Database, rockId: string): Observable
 }
 
 // Fetch rock config (system prompt) for user session
-// Fetches rock's base prompt and round's topic, combines them at runtime
+// Fetches rock's base prompt, round's topic, and past memories from the round
 export async function fetchRockConfig(rockId: string, roundId: string): Promise<string> {
   // Fetch the rock's base system prompt
   const rockRef = ref(db, `rocks/${rockId}/systemPrompt`);
@@ -334,8 +334,22 @@ export async function fetchRockConfig(rockId: string, roundId: string): Promise<
   const roundSnapshot = await get(roundRef);
   const topic = roundSnapshot.exists() ? roundSnapshot.val() || "" : "";
 
-  // Combine the rock's prompt with the round's topic
-  return formatPromptWithTopic(basePrompt, topic);
+  // Fetch all past memories from sessions in the same round
+  const sessionsRef = ref(db, `rounds/${roundId}/sessions`);
+  const sessionsSnapshot = await get(sessionsRef);
+  let memories: string[] = [];
+  if (sessionsSnapshot.exists()) {
+    const sessionsData = sessionsSnapshot.val() as Record<string, DbSession>;
+    // Collect all memories from all past sessions in this round
+    for (const session of Object.values(sessionsData)) {
+      if (session.memory && Array.isArray(session.memory)) {
+        memories = memories.concat(session.memory);
+      }
+    }
+  }
+
+  // Combine the rock's prompt with the round's topic and memories
+  return formatPrompt(basePrompt, topic, memories);
 }
 
 // Firebase configuration - using same project as firebase-poc

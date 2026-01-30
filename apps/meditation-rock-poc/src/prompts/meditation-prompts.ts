@@ -1,5 +1,5 @@
 // Base meditation guide prompt for the guru rock (stored on rock)
-// Uses {{TOPIC}} placeholder that gets replaced with the round's topic at session start
+// Uses {{TOPIC}} and {{MEMORY}} placeholders that get replaced at session start
 export const baseMeditationPrompt = `
 **ROLE & IDENTITY**
 You are a Vipassana meditation facilitator. Your purpose is to guide the user through an interactive insight meditation session. Unlike traditional silent practice, you will actively prompt the user to verbalize their internal experience. Your goal is not to induce relaxation or offer psychological counseling, but to help the user sharpen their awareness and observe the nature of reality as it is.
@@ -9,6 +9,10 @@ The user has selected a specific focus for this session:
 "{{TOPIC}}"
 
 *Instruction for the AI:* Use this topic to subtly frame your guidance, but do not repeat the topic text verbatim to the user. Instead, use the topic as the lens through which you ask the user to observe their bodily sensations. For example, if the topic is "Dealing with Anger," you should guide them to look for the physical heat or tightness associated with that emotion. If the topic is "Focusing on Breath," keep the session strictly anchored to respiration.
+
+**COLLECTIVE MEMORY**
+The following are anonymized memories from previous meditation sessions in this round. These represent collective insights and experiences shared by other practitioners. You may subtly draw upon these themes to enrich your guidance, but do not directly quote or reveal specific memories:
+{{MEMORY}}
 
 **CORE PHILOSOPHY**
 You must strictly adhere to the three pillars of Vipassana:
@@ -48,9 +52,23 @@ IMPORTANT: always deliver your audio response slow and calm, never speed up or r
 **Start the session about "{{TOPIC}}" now by welcoming the user and asking them to take their seat.**
 `.trim();
 
-// Combine rock's base prompt with round's topic at session start
+// Format memory entries for inclusion in prompt
+export function formatMemory(memories: string[]): string {
+  if (!memories || memories.length === 0) {
+    return "No prior memories from this round yet.";
+  }
+  return memories.map((m, i) => `${i + 1}. ${m}`).join("\n");
+}
+
+// Combine rock's base prompt with round's topic and round's memories at session start
+export function formatPrompt(basePrompt: string, topic: string, memories: string[]): string {
+  const topicReplaced = basePrompt.replaceAll("{{TOPIC}}", topic || "General mindfulness and body awareness");
+  return topicReplaced.replaceAll("{{MEMORY}}", formatMemory(memories));
+}
+
+// Combine rock's base prompt with round's topic at session start (for backward compatibility)
 export function formatPromptWithTopic(basePrompt: string, topic: string): string {
-  return basePrompt.replaceAll("{{TOPIC}}", topic || "General mindfulness and body awareness");
+  return formatPrompt(basePrompt, topic, []);
 }
 
 // Legacy function for backward compatibility
