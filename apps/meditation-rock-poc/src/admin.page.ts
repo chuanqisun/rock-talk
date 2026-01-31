@@ -468,7 +468,7 @@ const AdminPage = createComponent(() => {
                         <label for="templateType">Template:</label>
                         <select id="templateType" name="templateType" required>
                           <option value="meditation">Meditation</option>
-                          <option value="guided-reflection">Guided Reflection</option>
+                          <option value="guided-reflection">Reflection</option>
                         </select>
                       </div>
                       <button type="submit">Create Rock</button>
