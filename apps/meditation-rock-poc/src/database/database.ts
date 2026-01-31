@@ -324,10 +324,10 @@ export function observeSessionsForRock(db: Database, rockId: string): Observable
 // Fetch rock config (system prompt) for user session
 // Fetches rock's base prompt, round's topic, and past memories from the round
 export async function fetchRockConfig(rockId: string, roundId: string): Promise<string> {
-  // Fetch the round's topic
-  const roundRef = ref(db, `rounds/${roundId}/topic`);
-  const roundSnapshot = await get(roundRef);
-  const topic = roundSnapshot.exists() ? roundSnapshot.val() || "" : "";
+  // Fetch the round's topic (public read)
+  const topicRef = ref(db, `rounds/${roundId}/topic`);
+  const topicSnapshot = await get(topicRef);
+  const topic = topicSnapshot.exists() ? topicSnapshot.val() || "" : "";
 
   // Fetch the rock's base system prompt
   const rockRef = ref(db, `rocks/${rockId}/systemPrompt`);

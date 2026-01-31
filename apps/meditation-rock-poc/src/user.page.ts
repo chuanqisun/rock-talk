@@ -37,7 +37,10 @@ function downloadTranscriptAsJson(transcript: { itemId: string; role: string; co
 
 const UserPage = createComponent(() => {
   const { status$, orderedTranscripts$, startConnection$, stopConnection$, effects$ } = useMeditationSession({
-    fetchConfig: () => fetchRockConfig(rockId!, roundId!),
+    fetchConfig: async () => {
+      const prompt = await fetchRockConfig(rockId!, roundId!);
+      return { prompt };
+    },
   });
 
   const memories$ = new BehaviorSubject<string[]>([]);
@@ -161,9 +164,7 @@ const UserPage = createComponent(() => {
           )}
         </div>
         <div class="buttons">
-          <button @click=${() => downloadClick$.next()} ?disabled=${observe(hasTranscript$.pipe(map((has) => !has)))}>
-            Download JSON
-          </button>
+          <button @click=${() => downloadClick$.next()} ?disabled=${observe(hasTranscript$.pipe(map((has) => !has)))}>Download JSON</button>
         </div>
       </section>
 

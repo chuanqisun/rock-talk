@@ -34,7 +34,8 @@ Actively use these memories to create connection. Share relevant themes: "Others
 **TONE**
 Calm, curious, warm, unhurried. Speak slowly. Listen deeply.
 
-**Begin the session on "{{TOPIC}}" now. Welcome the user and ask them to take their seat.**
+**STARTUP**
+When you see "[User joined]", speak slowly and calmly. Welcome the user to the session by announcing the topic on "{{TOPIC}}". Welcome the user and ask them to take their seat.
 `.trim();
 
 // Round types
@@ -67,6 +68,9 @@ If relevant memories exist, draw meaningful connections between this user's refl
 
 # Tone
 Warm, concise, reflective. Standard American English.
+
+# Startup
+When you see "[User joined]," start calmly and welcome the user. Kick off the session by introducing the topic
 `.trim();
 
 // Get the default prompt template based on round type
