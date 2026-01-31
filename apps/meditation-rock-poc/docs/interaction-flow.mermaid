@@ -1,0 +1,24 @@
+flowchart TD
+	%% RockTalk interaction flow (high-level)
+
+	M[Community Moderator] -->|Invite seed member| S[Seed Community Member]
+	S -->|Create a Rock (practice + values)| R[Rock “Teacher”】【
+	M -->|Choose a shared topic| T[Round Topic]
+	T -->|Create Round| RD[Round]
+
+	R -->|Generate unique link| U[Unique Rock URL]
+	RD -->|Context for sessions| U
+
+	U -->|Share link| CM[Community Members]
+	CM -->|Open link & do session| SES[Guided Reflection Session]
+	SES -->|Submit anonymized traces| AM[Anonymized Memories]
+	AM -->|Stored by Rock + Round| MEM[Community Memory Pool]
+
+	MEM -->|Informs future sessions| R
+
+	M -->|When community gathers| G[Live Group Discussion]
+	MEM -->|Synthesize themes/insights| SYN[Moderator Synthesis]
+	SYN --> G
+
+	%% Optional framing
+	SES -.->|Optional: keep private| NP[No Submission]
