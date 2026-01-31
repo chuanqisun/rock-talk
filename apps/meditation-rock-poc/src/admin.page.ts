@@ -15,8 +15,8 @@ import {
   observeRounds,
   updateRock,
   updateRound,
-  type DbRoundWithId,
   type DbRockWithId,
+  type DbRoundWithId,
 } from "./database/database";
 import { generateThemes } from "./moderator/generate-themes";
 import { type RoundType } from "./prompts/meditation-prompts";
@@ -253,9 +253,7 @@ const AdminPage = createComponent(() => {
               <div class="item-header">
                 <h3>🪨 ${rock.name}</h3>
                 <div>
-                  <button @click=${() => selectedRockId$.next(isSelected ? null : rock.id)}>
-                    ${isSelected ? "Collapse" : "Expand"}
-                  </button>
+                  <button @click=${() => selectedRockId$.next(isSelected ? null : rock.id)}>${isSelected ? "Collapse" : "Expand"}</button>
                   <button class="delete-button" @click=${() => deleteRock$.next(rock.id)}>Delete</button>
                 </div>
               </div>
@@ -327,9 +325,7 @@ const AdminPage = createComponent(() => {
               <div class="item-header">
                 <h3>📿 ${round.topic}</h3>
                 <div>
-                  <button @click=${() => selectedRoundId$.next(isSelected ? null : round.id)}>
-                    ${isSelected ? "Collapse" : "Expand"}
-                  </button>
+                  <button @click=${() => selectedRoundId$.next(isSelected ? null : round.id)}>${isSelected ? "Collapse" : "Expand"}</button>
                   <button class="delete-button" @click=${() => deleteRound$.next(round.id)}>Delete</button>
                 </div>
               </div>
@@ -356,13 +352,7 @@ const AdminPage = createComponent(() => {
                           ${rocks.map(
                             (rock) => html`
                               <li>
-                                <a
-                                  class="user-link"
-                                  href="./user.html?round=${round.id}&rock=${rock.id}"
-                                  target="_blank"
-                                >
-                                  ${rock.name}
-                                </a>
+                                <a class="user-link" href="./user.html?round=${round.id}&rock=${rock.id}" target="_blank"> ${rock.name} </a>
                               </li>
                             `
                           )}
@@ -395,11 +385,7 @@ const AdminPage = createComponent(() => {
                               @click=${() => generateThemesForRound$.next(round.id)}
                               ?disabled=${observe(generatingThemesFor$.pipe(map((generating) => generating === round.id)))}
                             >
-                              ${observe(
-                                generatingThemesFor$.pipe(
-                                  map((generating) => (generating === round.id ? "Generating..." : "Generate Themes"))
-                                )
-                              )}
+                              ${observe(generatingThemesFor$.pipe(map((generating) => (generating === round.id ? "Generating..." : "Generate Themes"))))}
                             </button>
                             <button
                               @click=${() => deleteThemesForRound$.next(round.id)}
@@ -429,9 +415,7 @@ const AdminPage = createComponent(() => {
                                   ? html`
                                       <ul>
                                         ${allThemes.map((theme) => html`<li>${theme}</li>`)}
-                                        ${generating === round.id
-                                          ? html`<li style="opacity: 0.6;"><em>Generating...</em></li>`
-                                          : ""}
+                                        ${generating === round.id ? html`<li style="opacity: 0.6;"><em>Generating...</em></li>` : ""}
                                       </ul>
                                     `
                                   : html`<p>No themes</p>`;
@@ -452,7 +436,7 @@ const AdminPage = createComponent(() => {
 
   const template = html`
     <header class="app-header">
-      <h1>🧘 Meditation Rock Admin</h1>
+      <h1>Rock Admin</h1>
       <menu class="action-menu">
         <button commandfor="connection-dialog" command="show-modal">Setup</button>
         ${observe(signInButton)} ${observe(userEmail$)}
@@ -460,16 +444,10 @@ const AdminPage = createComponent(() => {
     </header>
     <main>
       <div class="tabs">
-        <button
-          class="tab-button ${observe(activeTab$.pipe(map((tab) => (tab === "rocks" ? "active" : ""))))}"
-          @click=${() => activeTab$.next("rocks")}
-        >
+        <button class="tab-button ${observe(activeTab$.pipe(map((tab) => (tab === "rocks" ? "active" : ""))))}" @click=${() => activeTab$.next("rocks")}>
           🪨 Rocks
         </button>
-        <button
-          class="tab-button ${observe(activeTab$.pipe(map((tab) => (tab === "rounds" ? "active" : ""))))}"
-          @click=${() => activeTab$.next("rounds")}
-        >
+        <button class="tab-button ${observe(activeTab$.pipe(map((tab) => (tab === "rounds" ? "active" : ""))))}" @click=${() => activeTab$.next("rounds")}>
           📿 Rounds
         </button>
       </div>
@@ -489,8 +467,8 @@ const AdminPage = createComponent(() => {
                       <div class="form-field">
                         <label for="templateType">Template:</label>
                         <select id="templateType" name="templateType" required>
-                          <option value="meditation">🧘 Meditation</option>
-                          <option value="guided-reflection">💬 Guided Reflection</option>
+                          <option value="meditation">Meditation</option>
+                          <option value="guided-reflection">Guided Reflection</option>
                         </select>
                       </div>
                       <button type="submit">Create Rock</button>
@@ -499,11 +477,7 @@ const AdminPage = createComponent(() => {
 
                   <section>
                     <h2>Rocks</h2>
-                    ${observe(
-                      combineLatest([rocks$, selectedRockId$]).pipe(
-                        map(([rocks, selectedRockId]) => renderRocksList(rocks, selectedRockId))
-                      )
-                    )}
+                    ${observe(combineLatest([rocks$, selectedRockId$]).pipe(map(([rocks, selectedRockId]) => renderRocksList(rocks, selectedRockId))))}
                   </section>
                 `
               : html`

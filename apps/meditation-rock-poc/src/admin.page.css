@@ -4,8 +4,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  padding-bottom: 2rem;
+  padding: 0.5rem;
 }
 
 .action-menu {
@@ -14,8 +13,18 @@
   align-items: center;
 }
 
+h1 {
+  font-size: 22px;
+}
+h2 {
+  font-size: 18px;
+}
+h3 {
+  font-size: 14px;
+}
+
 main {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 section {
@@ -44,13 +53,17 @@ textarea {
   field-sizing: content;
   resize: none;
   font-family: inherit;
+  font-size: inherit;
   padding: 0.25rem 0.5rem;
   min-height: 60px;
 }
 
+button,
+select,
 input {
   padding: 0.25rem 0.5rem;
   font-family: inherit;
+  font-size: inherit;
 }
 
 label {
@@ -131,8 +144,8 @@ label {
 .delete-button {
   background: #dc3545;
   color: white;
-  border: none;
-  padding: 0.25rem 0.5rem;
+  border: 1px solid #8e1b26;
+  border-radius: 2px;
   cursor: pointer;
 }
 
