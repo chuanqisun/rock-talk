@@ -31,7 +31,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
           },
         },
         output: {
-          voice: "coral",
+          voice: ["marin", "cedar", "coral"].at(0)!,
         },
       },
     },
@@ -81,7 +81,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
     switchMap(() =>
       getEphermeralToken$({
         apiKey: apiKeys$.value.openai!,
-        voice: "coral",
+        voice: ["marin", "cedar", "coral"].at(0)!,
         model: "gpt-realtime",
       })
     ),
