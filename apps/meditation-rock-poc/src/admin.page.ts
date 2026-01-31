@@ -323,7 +323,7 @@ const AdminPage = createComponent(() => {
           return html`
             <div class="item-card">
               <div class="item-header">
-                <h3>📿 ${round.topic}</h3>
+                <h3>💬 ${round.topic}</h3>
                 <div>
                   <button @click=${() => selectedRoundId$.next(isSelected ? null : round.id)}>${isSelected ? "Collapse" : "Expand"}</button>
                   <button class="delete-button" @click=${() => deleteRound$.next(round.id)}>Delete</button>
@@ -448,7 +448,7 @@ const AdminPage = createComponent(() => {
           🪨 Rocks
         </button>
         <button class="tab-button ${observe(activeTab$.pipe(map((tab) => (tab === "rounds" ? "active" : ""))))}" @click=${() => activeTab$.next("rounds")}>
-          📿 Rounds
+          💬 Rounds
         </button>
       </div>
 
