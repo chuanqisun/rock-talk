@@ -46,7 +46,7 @@ Both experiences are designed for gallery deployment (continuous run mode during
 - **Offline mode:** not supported.
 - **Latency:** low-latency connection strongly preferred (real-time voice experience).
 
-## Software (condensed)
+## Software
 
 RockTalk runs as a browser-based web application with two entry points:
 
