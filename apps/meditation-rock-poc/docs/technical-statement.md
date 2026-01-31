@@ -1,77 +1,87 @@
-# RockTalk — Technical Statement (Software Rider)
+# RockTalk — Technical Rider (Installation)
 
-This technical rider describes the software requirements and operational needs for exhibiting RockTalk at C&C 2026. It focuses on the deployed web experience (admin setup + participant sessions).
+This technical rider describes the logistical, spatial, and technical requirements for exhibiting **RockTalk** at C&C 2026.
 
-## Overview
+It situates the software needs within the broader installation. For concept, interaction model, and system framing, see the main paper draft: [docs/paper-draft.md](paper-draft.md).
+
+## Summary (What visitors do)
+
+RockTalk is a two-part visitor experience:
+
+1. **Listening station:** visitors listen (on headphones) to a curated “rock” audio program (community memory + prompts).
+2. **Session station:** visitors optionally try a short RockTalk session using **headphones + microphone**.
+
+Both experiences are designed for gallery deployment (continuous run mode during open hours) with minimal operator intervention.
+
+## Space & footprint (placeholders)
+
+- **Overall footprint (W×D):** [PLACEHOLDER]
+- **Height / vertical elements:** [PLACEHOLDER]
+- **Number of stations:** [PLACEHOLDER: e.g., 1 listening + 1 session]
+- **Queue area / waiting line (W×D):** [PLACEHOLDER]
+- **Accessibility considerations (wheelchair clearance, seating, captions/signage):** [PLACEHOLDER]
+
+## Exhibit components (what we provide vs. venue provides)
+
+### We provide
+
+- **Laptop (pre-configured)** with the RockTalk web app ready to run.
+- **Installation objects / display elements:** [PLACEHOLDER: rock objects, plinths, dock/base, etc.]
+- **Signage / instructions (print-ready files):** [PLACEHOLDER]
+- **Spare cables / adapters:** [PLACEHOLDER]
+
+### Venue provides (requested)
+
+- **Stable internet** (wired ethernet preferred; high-quality Wi‑Fi acceptable).
+- **Power outlet(s)** within the installation footprint.
+- **Audio equipment for visitors:**
+  - **Headphones (x[PLACEHOLDER])** for listening and for session privacy.
+  - **Microphone solution (x[PLACEHOLDER])**:
+    - Preferred: **USB headset(s)** (headphones + mic).
+    - Acceptable: standalone mic(s) if paired with headphones.
+
+## Network & internet requirements (critical)
+
+- The experience requires **continuous internet** for real-time AI audio interaction and cloud data storage.
+- **Offline mode:** not supported.
+- **Latency:** low-latency connection strongly preferred (real-time voice experience).
+
+## Software (condensed)
 
 RockTalk runs as a browser-based web application with two entry points:
 
-- **Admin interface** for moderators to create and manage “rocks” and “rounds,” and to synthesize themes from submitted memories.
-- **Participant interface** for visitors to enter a rock session via a shared URL and complete a short, voice-based reflection.
+- **Admin interface** (moderator/operator): select a round + rock, manage content, and view synthesized themes.
+- **Participant interface** (visitors): run a short voice-based reflection session.
 
-The experience depends on real-time AI audio interaction and cloud data storage; therefore stable internet is required.
+Operational note:
 
-## Software stack (high level)
+- We will bring a **pre-configured laptop** with the software installed and tested.
+- Day-of operation primarily requires launching the browser and opening the prepared URLs.
 
-- Web client: TypeScript single-page application built with Vite.
-- AI services:
-  - Real-time voice interaction via OpenAI Realtime (audio in/out + speech-to-text).
-  - Post-session anonymization via OpenAI (converts transcript into anonymized memory entries).
-- Cloud backend: Firebase Realtime Database (stores rocks, rounds, sessions, and anonymized memories).
+## Day-of operations & staffing (placeholders)
 
-## Run mode
+- **Setup time (install):** [PLACEHOLDER]
+- **Teardown time (de-rig):** [PLACEHOLDER]
+- **On-site staffing:** [PLACEHOLDER: 1–2 artists/operators during peak hours]
+- **Daily start-up checklist:** [PLACEHOLDER]
+- **Daily shutdown checklist:** [PLACEHOLDER]
 
-- Intended to run continuously during exhibition hours.
-- Primary operation is visitor-led: a participant opens a rock link, starts a session, speaks, ends the session, then optionally submits anonymized memories.
+## Crowd flow & management (placeholders)
 
-## Venue requirements (software-related)
+- **Estimated session duration:** [PLACEHOLDER: e.g., 5–10 min]
+- **Throughput estimate (visitors/hour):** [PLACEHOLDER]
+- **Queue management:** [PLACEHOLDER: stanchions, floor tape, signage]
+- **Noise management:** Headphones required; [PLACEHOLDER: additional sound damping / placement]
+- **Privacy considerations:** semi-enclosed session area preferred; [PLACEHOLDER]
 
-- **Stable internet connection** (wired or high-quality Wi‑Fi).
-  - The experience will not function offline.
-  - Low-latency connectivity is strongly preferred due to real-time audio.
-- **Power**
-  - Power outlet(s) for the exhibit computer(s) and any audio peripherals.
-  - Power cords / extension cords as needed for the install footprint.
-- **Personal audio equipment (required)**
-  - Headphones (for private listening and to reduce audio feedback in the gallery).
-  - Microphone (or a headset with mic) for reliable voice capture.
+## Data handling & privacy (brief)
 
-## Exhibit hardware assumptions
+- During a session, the system produces a transcript for participant review.
+- After the session, the participant may generate anonymized “memory” entries derived from the transcript.
+- **Submission is optional** and initiated by the participant.
 
-RockTalk can run on a standard modern laptop.
+## Safety, permissions, and compliance
 
-Minimum recommended:
-
-- A laptop capable of running a modern Chromium-based browser.
-- Chrome/Edge/Safari/Firefox current versions.
-- USB headset (headphones + mic) or equivalent.
-
-## Operator workflow (day-of)
-
-1. Open the Admin interface.
-2. Sign in (moderator account).
-3. Create or select a Round (topic).
-4. Create or select Rocks (prompt/personality templates).
-5. Copy/share participant URLs for the current round/rock.
-6. Visitors use the Participant interface to run sessions.
-
-## Credentials and configuration
-
-- The participant interface requires an OpenAI API key to be provided in the on-screen “Setup” dialog.
-- Firebase connection is pre-configured in the build.
-
-Notes:
-
-- API keys are entered by the operator and should be handled as sensitive credentials.
-- If the conference prefers, credentials can be provided on the artist’s own device only.
-
-## Data handling (software)
-
-- During a session, the system produces a transcript (for participant review).
-- After the session, the participant can generate anonymized “memory” entries derived from the transcript.
-- Only the anonymized memory entries are submitted to the community dataset; submission is optional and initiated by the participant.
-
-## Safety and compliance notes
-
-- No special software safety hazards.
-- The installation requires standard browser permissions for microphone access.
+- The session station requires standard browser **microphone permission**.
+- No special physical hazards beyond standard AV/installation safety; [PLACEHOLDER: any hardware safety notes].
+- [PLACEHOLDER: signage for microphone use / consent / content advisory].
