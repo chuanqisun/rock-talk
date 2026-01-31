@@ -3,8 +3,11 @@ import { BehaviorSubject, catchError, combineLatest, EMPTY, ignoreElements, map,
 import { apiKeys$ } from "../connections/connections.component";
 import { getEphermeralToken$ } from "../openai/token";
 
+export type SessionType = "meditation" | "reflection";
+
 export interface MeditationSessionProps {
   fetchConfig: () => Promise<string>;
+  sessionType: SessionType;
 }
 
 export function useMeditationSession(props: MeditationSessionProps) {
@@ -110,7 +113,13 @@ export function useMeditationSession(props: MeditationSessionProps) {
         const instructions = await props.fetchConfig();
         console.log("Fetched instructions:", instructions);
         await updateInstruction(instructions);
-        await session.sendMessage("(Speak slowly and calmly. Welcome the user to the session by announcing the topic.)");
+
+        const prompt =
+          props.sessionType === "meditation"
+            ? "(Speak slowly and calmly. Welcome the user to the session by announcing the topic)"
+            : "(Start calmly and welcome the user. Kick off the session by introducing the topic)";
+
+        await session.sendMessage(prompt);
       } catch (error) {
         console.error("Error fetching config:", error);
       }
