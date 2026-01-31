@@ -4,7 +4,7 @@ This technical rider describes the logistical, spatial, and technical requiremen
 
 It situates the software needs within the broader installation. For concept, interaction model, and system framing, see the main paper draft: [docs/paper-draft.md](paper-draft.md).
 
-## Summary (What visitors do)
+## Summary
 
 RockTalk is a two-part visitor experience:
 
@@ -13,7 +13,7 @@ RockTalk is a two-part visitor experience:
 
 Both experiences are designed for gallery deployment (continuous run mode during open hours) with minimal operator intervention.
 
-## Space & footprint (placeholders)
+## Space & footprint
 
 - **Overall footprint (W×D):** [PLACEHOLDER]
 - **Height / vertical elements:** [PLACEHOLDER]
@@ -58,7 +58,7 @@ Operational note:
 - We will bring a **pre-configured laptop** with the software installed and tested.
 - Day-of operation primarily requires launching the browser and opening the prepared URLs.
 
-## Day-of operations & staffing (placeholders)
+## Day-of operations & staffing
 
 - **Setup time (install):** [PLACEHOLDER]
 - **Teardown time (de-rig):** [PLACEHOLDER]
@@ -66,7 +66,7 @@ Operational note:
 - **Daily start-up checklist:** [PLACEHOLDER]
 - **Daily shutdown checklist:** [PLACEHOLDER]
 
-## Crowd flow & management (placeholders)
+## Crowd flow & management
 
 - **Estimated session duration:** [PLACEHOLDER: e.g., 5–10 min]
 - **Throughput estimate (visitors/hour):** [PLACEHOLDER]
@@ -74,7 +74,7 @@ Operational note:
 - **Noise management:** Headphones required; [PLACEHOLDER: additional sound damping / placement]
 - **Privacy considerations:** semi-enclosed session area preferred; [PLACEHOLDER]
 
-## Data handling & privacy (brief)
+## Data handling & privacy
 
 - During a session, the system produces a transcript for participant review.
 - After the session, the participant may generate anonymized “memory” entries derived from the transcript.
