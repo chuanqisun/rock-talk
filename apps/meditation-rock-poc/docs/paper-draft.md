@@ -96,44 +96,15 @@ In this installation, we share excerts from a proof-of-concept deployed within t
 
 ## RockTalk: Design
 
-RockTalk is designed as a community reflection ritual. It takes practices from constructive community work, like shared questions, mutual accountability, and care that builds over time, and turns them into a format people can do alone without leaving the group behind.
+RockTalk begins with a community facilitator, not a model. The facilitator works with a community member to translate a spiritual practice into a rock. The result is a consistent facilitation stance with a recognizable voice, pacing, and method that reflects the community where it came from.
 
-The interaction has two core ingredients: rocks and rounds. A rock is a facilitation stance. It is a teacher with a consistent voice and method for guiding reflection, such as gentle questioning, longer silences, or direct prompts. A round is a shared inquiry the group explores for a limited period and can revisit later. Think of a month spent with a topic like creative fear, rest, or commitment. People join a specific rock within a specific round through a simple link, which makes the practice easy to pass along.
+The facilitator also sets a round topic. A round is a shared inquiry the community holds for a limited period, such as creative fear, rest, or commitment. Each rock and round pairing has a unique link that can be shared widely. Members enter through that link and complete a short guided session.
 
-During a session, the rock guides a short voice reflection that stays with the round topic. That constraint matters. It lowers the pressure to perform. It helps people avoid spiraling into open ended life advice. It also supports the steady pace of good facilitation: a question, a pause, then a return to the shared frame. In our pilot, the rock sometimes begins by placing the participant inside a collective field of attention before turning inward: “That’s a great insight. Getting familiar with the cold is a big step. Others have shared similar feelings, that gradual adaptation. What changes are you noticing in your body today, compared to when the storm first hit?” This kind of phrasing is deliberate. It gives the solitude of a personal session the faint but unmistakable presence of community, a reminder that the inquiry is being held by more than one person.
+In the session, the rock avoids giving sweeping answers. It stays close to reflection and small shifts in attention. The tone is steady and non judging. It can acknowledge collectivity without naming anyone, for example: “I hear you. That restlessness is something others have shared too.” It can also model a patient stance, such as “Let’s just notice that together, without judgment.” When a participant generates their own meaning, the rock reinforces the move without escalating it: “That’s a beautiful insight. Let’s gently stay with that subtle tingling sensation.”
 
-As the session unfolds, the rock keeps returning to lived sensation. It invites small, doable actions, then listens for what shifts. When the round theme risks becoming purely conceptual, the rock pulls it back toward concrete experience. In the pilot, when a participant described cold hands and dry winter air, the rock offered a simple experiment: “Try gently wiggling your fingers or rubbing your hands together. Notice if there’s even the tiniest shift in sensation.” This is the pedagogy of RockTalk. Not grand counsel. Not abstract reassurance. It is attention, practice, and the smallest measurable change.
+The round topic keeps the conversation tethered to a shared frame while still leaving room for lived specificity. In one session, the rock invites the participant to hold two conditions at once: “Notice how both sensations can coexist.” The participant answers by returning the theme to community care: “Even though it's cold when I'm with my friends who is carrying each other and having a fun moment, I feel like it can be warm.” See Appendix A for the full transcript.
 
-Afterward, participants can review what was captured and, if they choose, contribute a few anonymized memories back to the round. These memories are gifts to future participants. They are brief traces of themes, emotions, and turning points that protect privacy while still offering companionship. As a round grows, it becomes a shared archive. The rock can acknowledge patterns by speaking in aggregates rather than quotations. It can say that others have been here too, without exposing anyone’s story.
-
-RockTalk also includes a moderator role. The moderator curates rocks and rounds, then periodically synthesizes themes from the memories. This creates a path from private reflection to shared discussion. It mirrors constructive community practice where individual sense making becomes material for collective care. In this design, AI is not a replacement confidant. It is a structured mediator that helps a group hold questions together with patience.
-
-```mermaid
-flowchart TD
-    %% RockTalk interaction flow (high-level)
-
-    M[Community Moderator] -->|Invite seed member| S[Seed Community Member]
-    S -->|Create a Rock practice + values| R["Rock Teacher"]
-    M -->|Choose a shared topic| T[Round Topic]
-    T -->|Create Round| RD[Round]
-
-    R -->|Generate unique link| U[Unique Rock URL]
-    RD -->|Context for sessions| U
-
-    U -->|Share link| CM[Community Members]
-    CM -->|Open link & do session| SES[Guided Reflection Session]
-    SES -->|Submit anonymized traces| AM[Anonymized Memories]
-    AM -->|Stored by Rock + Round| MEM[Community Memory Pool]
-
-    MEM -->|Informs future sessions| R
-
-    M -->|When community gathers| G[Live Group Discussion]
-    MEM -->|Synthesize themes/insights| SYN[Moderator Synthesis]
-    SYN --> G
-
-    %% Optional framing
-    SES -.->|Optional: keep private| NP[No Submission]
-```
+After the session, the participant can choose to contribute a brief anonymized trace to the community memory for that specific rock and round. These traces are not treated as quotes to be replayed. They are used as aggregated signals that let the rock speak with a sense of shared history while protecting privacy. When the community gathers later, the facilitator synthesizes themes from the round and uses them to guide discussion, connecting private practice back to collective care.
 
 ---
 
@@ -148,20 +119,6 @@ To deepen the immersion within this multi-user system, a video monitor plays a l
 ![Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones.](Assets/placeholder.png)
 
 _Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones._
-
-### Concept
-
-### Interaction Flow
-
-The primary parameter given to the `acmart` document class is the _template style_ which corresponds to the kind of publication or SIG publishing the work. This parameter is enclosed in square brackets and is a part of the `documentclass` command:
-
-```text
-\documentclass[STYLE]{acmart}
-```
-
-- modular, scalable system
-- rock display, listening
-- screens showing interactions with rocks
 
 ### Summary
 
@@ -178,6 +135,44 @@ Modifying the template --- including but not limited to: adjusting margins, type
 To Robert, for the bagels and explaining CMYK and color spaces.
 
 ---
+
+## Appendix A: Sample Session Transcript
+
+**Date:** January 31, 2026
+
+**Topic:** Surviving the Winter Storm
+
+**Round ID:** -Ok6s_5aq5Eqk-cp9yzx
+
+**Rock:** Hello, and welcome. Let’s begin. We’re exploring the theme of “Surviving the winter storm.” Take a moment and settle into your seat. Let your body find a comfortable position. What’s drawing you to this topic today?
+
+**Community member:** I was so afraid that the winter storm will is coming to Boston when I was snowboarding, but because I was with my friend and everyone was so prepared for the snowstorm, it was okay and with a hot chocolate, surviving inside the snowstorm was okay.
+
+**Rock:** Thank you for sharing that. Let’s gently bring our awareness to the sensations that come up for you when you recall that moment. Take a deep breath. Notice how your body feels right now as you reflect on being with your friend, holding that hot chocolate. Where in your body do you feel that sense of relief or warmth?
+
+**Community member:** Because I'm holding a hot chocolate, I can feel warmth in my hand. And is spreading to my heart.
+
+**Rock:** That’s beautiful. Let’s stay with that sensation. Feel the warmth in your hands, and notice how it’s spreading to your heart. Let’s gently breathe into that space. As you breathe, what else do you notice in your chest or around your heart area?
+
+**Community member:** The cold air is coming in through my nose, but still, because I'm holding hot chocolate, it's warm.
+
+**Rock:** Let’s explore that contrast. Feel the cool air entering through your nose, and the warmth radiating from your hands and heart. Notice how both sensations can coexist. What does that balance between cold and warmth tell you about surviving the winter storm?
+
+**Community member:** It feels like, even though it's cold when I'm with my friends who is carrying each other and having a fun moment, I feel like it can be warm.
+
+**Rock:** Yes, that feeling of connection and shared warmth can soften the edges of the cold. Let’s pause here and gently invite your awareness to your heart. What sensations are arising there as you reflect on the warmth of companionship in the storm?
+
+**Community member:** Like, I think being a best friend means that how many meals that we shared each together. And because it was inside the snowstorm, we should cook everything and we always had meals together from the breakfast, lunch, and dinner. And sharing soup, like sharing hot food, warm food, was so great.
+
+**Rock:** That’s a powerful image. Let’s bring that warmth into your awareness now. Notice how sharing those warm meals felt in your body. Where do you sense that feeling of togetherness and nourishment right now?
+
+**Community member:** You mean in my body?
+
+**Rock:** Yes, exactly. In your body. Take a moment and notice where that feeling of togetherness and warmth lives. Maybe it’s a gentle glow in your chest, or a soft fullness in your belly. Let’s explore what’s present for you right now.
+
+**Community member:** Eating soft.
+
+**Rock:** That softness is important. Let’s sit with that soft sensation in your body. As you breathe, notice if it expands or shifts. What is this softness telling you about how you experience surviving the winter storm?
 
 ## References
 
