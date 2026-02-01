@@ -1,0 +1,91 @@
+{
+  "roundId": "-Ok6s_5aq5Eqk-cp9yzx",
+  "rockId": "-OkGYm3Nlx1ofe8TXhDN",
+  "timestamp": "2026-01-31T21:23:54.359Z",
+  "transcript": [
+    {
+      "role": "model",
+      "content": "Hello there. Welcome. Let’s take a deep breath together. Our focus today is on surviving the winter storm. How are you feeling right now in your body, especially with the cold outside?"
+    },
+    {
+      "role": "user",
+      "content": "Because the snowstorm was last week, I feel like I'm getting more familiar with the cold."
+    },
+    {
+      "role": "model",
+      "content": "That’s a great insight. Getting familiar with the cold is a big step. Others have shared similar feelings—that gradual adaptation. What changes are you noticing in your body today, compared to when the storm first hit?"
+    },
+    {
+      "role": "user",
+      "content": "When the storm first hit it, the nose were freezing and it was sometimes hard to breathe. But right now, I'm enjoying the smell of the winter and the sunlight of the sunlight that is reflecting from the snow."
+    },
+    {
+      "role": "model",
+      "content": "That’s a beautiful shift. From freezing and struggling to breathe, to now enjoying the crisp winter scent and that snowy sunlight. It sounds like your body’s adjusting. How does your breathing feel now, compared to that first icy wave?"
+    },
+    {
+      "role": "user",
+      "content": "Right now it's quite okay, and yeah, I'm just breathing normally."
+    },
+    {
+      "role": "model",
+      "content": "That’s good to hear. Normal breathing is a sign that your body’s finding its rhythm, even in the cold. Are there any parts of your body that still feel a bit tense or could use some extra warmth?"
+    },
+    {
+      "role": "user",
+      "content": "I think my hands are the problem because without the gloves, it's so freezing."
+    },
+    {
+      "role": "model",
+      "content": "I hear you—the hands can be tricky in the cold. Let’s take a moment. Focus on your hands. Can you notice any subtle tingling or maybe a slight warmth starting to build in your fingers, even if it’s faint?"
+    },
+    {
+      "role": "user",
+      "content": "Not really, and also the other problem is that because it's winter, it's too dry."
+    },
+    {
+      "role": "model",
+      "content": "That dryness can really make it harder for warmth to settle in. Even if you’re not feeling tingling yet, that’s okay. Let’s slow down. Try gently wiggling your fingers or rubbing your hands together. Notice if there’s even the tiniest shift in sensation."
+    },
+    {
+      "role": "user",
+      "content": "rubbing my hand makes me feel warmer."
+    },
+    {
+      "role": "model",
+      "content": "That’s wonderful. Even that simple motion helps warmth spread. As you rub your hands, can you feel the warmth slowly moving up your arms or into your wrists?"
+    },
+    {
+      "role": "user",
+      "content": "Ja."
+    },
+    {
+      "role": "model",
+      "content": "That’s great. Let’s stay with that feeling for a moment. As the warmth spreads, notice if your breath gets any deeper or if your shoulders relax a little more. What’s shifting in your body right now?"
+    },
+    {
+      "role": "user",
+      "content": "My body is getting more relaxed."
+    },
+    {
+      "role": "model",
+      "content": "That’s a really good sign. Your body's easing into that relaxation, even in the cold. As you feel this shift, what’s one small thing you can do to hold on to that warmth a little longer?"
+    },
+    {
+      "role": "user",
+      "content": "對"
+    },
+    {
+      "role": "model",
+      "content": "Take your time. Even a gentle flex of your fingers, or wrapping your hands around something warm, can help. What feels like the next natural step for your body right now?"
+    },
+    {
+      "role": "user",
+      "content": "I think my body is quite warm right now."
+    },
+    {
+      "role": "model",
+      "content": "That’s a great place to be. Your body's finding warmth even in the cold. How would you describe that warmth—is it gentle, or more like a spreading glow inside?"
+    }
+  ]
+}
