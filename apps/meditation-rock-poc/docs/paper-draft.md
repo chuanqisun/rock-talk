@@ -96,7 +96,15 @@ In this installation, we share excerts from a proof-of-concept deployed within t
 
 ## RockTalk: Design
 
-_Placeholder: interaction flow figure (software)._
+RockTalk is designed as a community reflection ritual. It takes practices from constructive community work, like shared questions, mutual accountability, and care that builds over time, and turns them into a format people can do alone without leaving the group behind.
+
+The interaction has two core ingredients: _rocks_ and _rounds_. A rock is a facilitation stance. It is a teacher with a consistent voice and method for guiding reflection, such as gentle questioning, longer silences, or direct prompts. A round is a shared inquiry the group explores for a limited period and can revisit later. Think of a month spent with a topic like creative fear, rest, or commitment. People join a specific rock within a specific round through a simple link, which makes the practice easy to pass along.
+
+During a session, the rock guides a short voice reflection that stays with the round topic. That constraint matters. It lowers the pressure to perform, helps people avoid spiraling into open-ended “life advice,” and supports the steady pace of good facilitation: a question, a pause, then a return to the shared frame. Afterward, participants can review what was captured and, if they choose, contribute a few anonymized memories back to the round. These memories are gifts to future participants. They are brief traces of themes, emotions, and turning points that protect privacy while still offering companionship.
+
+As a round grows, it accumulates these anonymized traces. Later sessions can be shaped by what the group has already felt and noticed. The rock can acknowledge patterns by saying something like “Others exploring this topic have noticed…” without quoting or naming anyone. This is how the system creates continuity across time. It builds shared history without asking people to hand over raw personal narrative.
+
+RockTalk also includes a moderator role. The moderator curates rocks and rounds, then periodically synthesizes themes from the memories. This creates a path from private reflection to shared discussion. It mirrors constructive community practice where individual sense-making becomes material for collective care. In this design, AI is not a replacement confidant. It is a structured mediator that helps a group hold questions together with patience.
 
 ```mermaid
 flowchart TD
@@ -124,20 +132,6 @@ flowchart TD
     %% Optional framing
     SES -.->|Optional: keep private| NP[No Submission]
 ```
-
-RockTalk is designed as a community reflection ritual rather than a general-purpose chatbot. The system’s central design goal is to translate constructive community practice into an interaction people can do privately while still contributing to a collective. Instead of optimizing for endless conversation or hyper-personalized advice, RockTalk optimizes for repeatable, bounded encounters that are easy to share, easy to return to, and oriented toward meaning-making that can be held by a group.
-
-RockTalk is designed as a community reflection ritual rather than a general-purpose chatbot. The design goal is simple. It takes practices from constructive community work, like shared questions, mutual accountability, and care that builds over time, and turns them into a format people can do alone without leaving the group behind.
-
-The interaction has two core ingredients: _rocks_ and _rounds_. A rock is a facilitation stance. It is a teacher with a consistent voice and method for guiding reflection, such as gentle questioning, longer silences, or direct prompts. A round is a shared inquiry the group explores for a limited period and can revisit later. Think of a month spent with a topic like creative fear, rest, or commitment. People join a specific rock within a specific round through a simple link, which makes the practice easy to pass along.
-
-During a session, the rock guides a short voice reflection that stays with the round topic. That constraint matters. It lowers the pressure to perform, helps people avoid spiraling into open-ended “life advice,” and supports the steady pace of good facilitation: a question, a pause, then a return to the shared frame. Afterward, participants can review what was captured and, if they choose, contribute a few anonymized memories back to the round. These memories are gifts to future participants. They are brief traces of themes, emotions, and turning points that protect privacy while still offering companionship.
-
-As a round grows, it accumulates these anonymized traces. Later sessions can be shaped by what the group has already felt and noticed. The rock can acknowledge patterns by saying something like “Others exploring this topic have noticed…” without quoting or naming anyone. This is how the system creates continuity across time. It builds shared history without asking people to hand over raw personal narrative.
-
-RockTalk also includes a moderator role. The moderator curates rocks and rounds, then periodically synthesizes themes from the memories. This creates a path from private reflection to shared discussion. It mirrors constructive community practice where individual sense-making becomes material for collective care. In this design, AI is not a replacement confidant. It is a structured mediator that helps a group hold questions together with patience.
-
-The physcial design of the rock further supports.... (placeholder)
 
 ---
 
