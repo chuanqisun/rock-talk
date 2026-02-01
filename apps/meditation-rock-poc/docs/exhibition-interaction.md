@@ -1,4 +1,4 @@
-# Venue design
+# Venue design spec
 
 ## Entrance area
 
