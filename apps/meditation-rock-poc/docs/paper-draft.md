@@ -6,7 +6,8 @@ cass_lee@mit.edu • ORCID: 0000-0003-3422-4072
 **Sun Chuanqi** (Tangible Media Group, MIT Media Lab, Cambridge, Massachusetts, USA)  
 stack@mit.edu
 
-**???** (???)
+**Saetbyeol Leeyouk** (Critical Matter, MIT Media Lab, Cambridge, Massachusetts, USA)
+???@mit.edu
 
 ## Abstract
 
@@ -49,6 +50,8 @@ In this installation, we share excerts from a proof-of-concept deployed within t
 - recover lost social rituals
 
 ## RockTalk: Design
+
+![Interaction flow diagram](Assets/placeholder.png)
 
 RockTalk begins with a community facilitator, not a model. The facilitator works with a community member to translate a spiritual practice into a rock. The result is a consistent facilitation stance with a recognizable voice, pacing, and method that reflects the community where it came from.
 
@@ -118,5 +121,3 @@ Rock: That softness is important. Let’s sit with that soft sensation in your b
 ```
 
 ## References
-
-(From `sample-base` in ACM-Reference-Format; not included in provided text.)
