@@ -1,0 +1,7 @@
+- core tension: AI as isolating vs AI as communal
+- Limits of solitary AI interaction (reinforcement, echoing, extraction)
+- Historical wisdom practices (circle practice, meditation, gardens)
+- Philosophical grounding (Hume, collective moral reasoning)
+- This is an artwork + system + ritual
+- This project explores how AI-mediated rituals, grounded in physical space and structured by collective reflection, can reimagine purpose-seeking as a shared, ecological process rather than a solitary one.
+- recover lost social rituals

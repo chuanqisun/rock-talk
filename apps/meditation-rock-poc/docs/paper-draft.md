@@ -41,14 +41,6 @@ Each rock in the shared collection represents a spiritual teaching or reflective
 
 In this installation, we share excerts from a proof-of-concept deployed within the artists own creative community, and give viewers a chance to experience the rock journalling practice hands on. By sharing this work with a broader audience, we ask: Can AI models meaningfully mediate community dialogue?
 
-- core tension: AI as isolating vs AI as communal
-- Limits of solitary AI interaction (reinforcement, echoing, extraction)
-- Historical wisdom practices (circle practice, meditation, gardens)
-- Philosophical grounding (Hume, collective moral reasoning)
-- This is an artwork + system + ritual
-- This project explores how AI-mediated rituals, grounded in physical space and structured by collective reflection, can reimagine purpose-seeking as a shared, ecological process rather than a solitary one.
-- recover lost social rituals
-
 ## RockTalk: Design
 
 ![Interaction flow diagram](Assets/placeholder.png)
