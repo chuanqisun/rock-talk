@@ -3,60 +3,26 @@
 **Cassandra Lee** (MIT Center for Constructive Communication, Cambridge, Massachusetts, USA)  
 cass_lee@mit.edu • ORCID: 0000-0003-3422-4072
 
-**Lars Thørvӓld** (The Thørvӓld Group, Hekla, Iceland)  
-larst@affiliation.org
+**Sun Chuanqi** (Tangible Media Group, MIT Media Lab, Cambridge, Massachusetts, USA)  
+stack@mit.edu
 
-**Valerie Béranger** (Inria Paris-Rocquencourt, Rocquencourt, France)
-
-**Aparna Patel** (Rajiv Gandhi University, Doimukh, Arunachal Pradesh, India)
-
-**Huifen Chan** (Tsinghua University, Haidian Qu, Beijing Shi, China)
-
-**Charles Palmer** (Palmer Research Laboratories, San Antonio, Texas, USA)  
-cpalmer@prl.com
-
-**John Smith** (The Thørvӓld Group, Hekla, Iceland)  
-jsmith@affiliation.org
-
-**Julius P. Kumquat** (The Kumquat Consortium, New York, USA)  
-jpkumquat@consortium.net
+**???** (???)
 
 ## Abstract
 
 From writing critique to setting goals, people increasingly turn to AI systems to support reflection and support in creative practice. However these interactions are most often done in solitary contexts with sycophantic models that have a tendency to reinforce existing beliefs, rather than support the active process of self-discovery. In contrast, we submit RockTalk: an AI-mediated rock garden which facilitates asynchronous wisdom sharing between creatives in a community. Through this installation, we open a window into AI co-journalling, a concept which challenges hyper-personalized AI experiences, and provides structure for creativity community building. By embedding AI within a tangible, natural, shared interface, Rock Talk proposes experiences with AI that reflect values of committment, shared history, and time - serving as a wide metaphor for the collective desire for stronger connection and real social care.
 
-To do list
-
-- Example transcript (meditation + interactive)
-- Rock photographs
-  - people interacting with the phone version of the dock (maybe in a bedroom)
-- installation model
-  - Rhino dock modelling
-  - Installation modelling
-- Section writing
-  - Rock deisgn
-- Flow diagram
-- Header image
-- Revisions (
-- Submitting (Sun)
-
 ## CCS Concepts
 
-- Do Not Use This Code — Generate the Correct Terms for Your Paper
-- Do Not Use This Code — Generate the Correct Terms for Your Paper
-- Do Not Use This Code — Generate the Correct Terms for Your Paper
-- Do Not Use This Code — Generate the Correct Terms for Your Paper
+TBD
 
 ## Keywords
 
-Do, Not, Us, This, Code, Put, the, Correct, Terms, for, Your, Paper
+TBD
 
 ## Teaser Figure
 
-![Seattle Mariners at Spring Training, 2010.](sampleteaser)
-
-_Seattle Mariners at Spring Training, 2010._  
-Enjoying the baseball game from the third-base seats. Ichiro Suzuki preparing to bat.
+TBD
 
 ## Motivation
 
@@ -94,7 +60,7 @@ The round topic keeps the conversation tethered to a shared frame while still le
 
 After the session, the participant can choose to contribute a brief anonymized trace to the community memory for that specific rock and round. These traces are not treated as quotes to be replayed. They are used as aggregated signals that let the rock speak with a sense of shared history while protecting privacy. When the community gathers later, the facilitator synthesizes themes from the round and uses them to guide discussion, connecting private practice back to collective care.
 
-## Installation
+### Installation
 
 This installation of the Rock Talk concept gives viewers a window into the Media Lab rock garden of collective wisdom. Displayed as an interactive rock garden (figure X), viewers are invited to interact with unique rock personalities and listen to a curated chain of audio recordings made by past adopters of the rock.
 
@@ -106,17 +72,12 @@ To deepen the immersion within this multi-user system, a video monitor plays a l
 
 _Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones._
 
-### Summary
-
-...
-
-## Artist bios
+## Summary
 
 ## Acknowledgments
 
-To Robert, for the bagels and explaining CMYK and color spaces.
-
----
+TBD
+Thank AHA. Also thank Chengyu and Ruipeng for early contributions. (who else?)
 
 ## Appendix A: Pilot Session Transcript
 
