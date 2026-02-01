@@ -23,7 +23,7 @@ TBD
 
 ## Teaser Figure
 
-TBD
+![A rock made by the community, for the community](assets/rock.jpg)
 
 ## Motivation
 
@@ -43,7 +43,7 @@ In this installation, we share excerts from a proof of concept deployed within t
 
 ## RockTalk: Design
 
-![Interaction flow diagram](Assets/placeholder.png)
+![Interaction flow diagram](assets/flow-chart.png)
 
 RockTalk begins with a community facilitator, not a model. The facilitator works with a community member to translate a spiritual practice into a rock. The result is a consistent facilitation stance with a recognizable voice, pacing, and method that reflects the community where it came from.
 
@@ -85,7 +85,7 @@ Each rock in the collection is associated with a unique spiritual teacher by mak
 
 To deepen the immersion within this multi user system, a video monitor plays a looped video, showing clips from the individual and collective journalling experience. Additionally, viewers are invited into their own journalling session with one of the rocks in a semi enclosed private environment.
 
-![Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones.](Assets/placeholder.png)
+![Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones.](assets/sample-rock-installation.png)
 
 _Sketch of the installation setup. Viewers are invited to listen to audio excerpts from the collective journalling experience on headphones._
 
