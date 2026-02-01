@@ -21,8 +21,6 @@ jsmith@affiliation.org
 **Julius P. Kumquat** (The Kumquat Consortium, New York, USA)  
 jpkumquat@consortium.net
 
----
-
 ## Abstract
 
 From writing critique to setting goals, people increasingly turn to AI systems to support reflection and support in creative practice. However these interactions are most often done in solitary contexts with sycophantic models that have a tendency to reinforce existing beliefs, rather than support the active process of self-discovery. In contrast, we submit RockTalk: an AI-mediated rock garden which facilitates asynchronous wisdom sharing between creatives in a community. Through this installation, we open a window into AI co-journalling, a concept which challenges hyper-personalized AI experiences, and provides structure for creativity community building. By embedding AI within a tangible, natural, shared interface, Rock Talk proposes experiences with AI that reflect values of committment, shared history, and time - serving as a wide metaphor for the collective desire for stronger connection and real social care.
@@ -42,8 +40,6 @@ To do list
 - Revisions (
 - Submitting (Sun)
 
----
-
 ## CCS Concepts
 
 - Do Not Use This Code — Generate the Correct Terms for Your Paper
@@ -51,13 +47,9 @@ To do list
 - Do Not Use This Code — Generate the Correct Terms for Your Paper
 - Do Not Use This Code — Generate the Correct Terms for Your Paper
 
----
-
 ## Keywords
 
 Do, Not, Us, This, Code, Put, the, Correct, Terms, for, Your, Paper
-
----
 
 ## Teaser Figure
 
@@ -65,8 +57,6 @@ Do, Not, Us, This, Code, Put, the, Correct, Terms, for, Your, Paper
 
 _Seattle Mariners at Spring Training, 2010._  
 Enjoying the baseball game from the third-base seats. Ichiro Suzuki preparing to bat.
-
----
 
 ## Motivation
 
@@ -92,8 +82,6 @@ In this installation, we share excerts from a proof-of-concept deployed within t
 - This project explores how AI-mediated rituals, grounded in physical space and structured by collective reflection, can reimagine purpose-seeking as a shared, ecological process rather than a solitary one.
 - recover lost social rituals
 
----
-
 ## RockTalk: Design
 
 RockTalk begins with a community facilitator, not a model. The facilitator works with a community member to translate a spiritual practice into a rock. The result is a consistent facilitation stance with a recognizable voice, pacing, and method that reflects the community where it came from.
@@ -105,8 +93,6 @@ In the session, the rock avoids giving sweeping answers. It stays close to refle
 The round topic keeps the conversation tethered to a shared frame while still leaving room for lived specificity. In one session, the rock invites the participant to hold two conditions at once: “Notice how both sensations can coexist.” The participant answers by returning the theme to community care: “Even though it's cold when I'm with my friends who is carrying each other and having a fun moment, I feel like it can be warm.” See Appendix A for the full transcript.
 
 After the session, the participant can choose to contribute a brief anonymized trace to the community memory for that specific rock and round. These traces are not treated as quotes to be replayed. They are used as aggregated signals that let the rock speak with a sense of shared history while protecting privacy. When the community gathers later, the facilitator synthesizes themes from the round and uses them to guide discussion, connecting private practice back to collective care.
-
----
 
 ## Installation
 
@@ -122,13 +108,9 @@ _Sketch of the installation setup. Viewers are invited to listen to audio excerp
 
 ### Summary
 
----
+...
 
 ## Artist bios
-
-Modifying the template --- including but not limited to: adjusting margins, typeface sizes, line spacing, paragraph and list definitions, and the use of the `\vspace` command to manually adjust the vertical spacing between elements of your work --- is not allowed.
-
----
 
 ## Acknowledgments
 
@@ -136,43 +118,43 @@ To Robert, for the bagels and explaining CMYK and color spaces.
 
 ---
 
-## Appendix A: Sample Session Transcript
+## Appendix A: Pilot Session Transcript
 
-**Date:** January 31, 2026
+```txt
+Date: January 31, 2026
+Topic: Surviving the Winter Storm
+Round ID: -Ok6s_5aq5Eqk-cp9yzx
 
-**Topic:** Surviving the Winter Storm
+Rock: Hello, and welcome. Let’s begin. We’re exploring the theme of “Surviving the winter storm.” Take a moment and settle into your seat. Let your body find a comfortable position. What’s drawing you to this topic today?
 
-**Round ID:** -Ok6s_5aq5Eqk-cp9yzx
+Community member: I was so afraid that the winter storm will is coming to Boston when I was snowboarding, but because I was with my friend and everyone was so prepared for the snowstorm, it was okay and with a hot chocolate, surviving inside the snowstorm was okay.
 
-**Rock:** Hello, and welcome. Let’s begin. We’re exploring the theme of “Surviving the winter storm.” Take a moment and settle into your seat. Let your body find a comfortable position. What’s drawing you to this topic today?
+Rock: Thank you for sharing that. Let’s gently bring our awareness to the sensations that come up for you when you recall that moment. Take a deep breath. Notice how your body feels right now as you reflect on being with your friend, holding that hot chocolate. Where in your body do you feel that sense of relief or warmth?
 
-**Community member:** I was so afraid that the winter storm will is coming to Boston when I was snowboarding, but because I was with my friend and everyone was so prepared for the snowstorm, it was okay and with a hot chocolate, surviving inside the snowstorm was okay.
+Community member: Because I'm holding a hot chocolate, I can feel warmth in my hand. And is spreading to my heart.
 
-**Rock:** Thank you for sharing that. Let’s gently bring our awareness to the sensations that come up for you when you recall that moment. Take a deep breath. Notice how your body feels right now as you reflect on being with your friend, holding that hot chocolate. Where in your body do you feel that sense of relief or warmth?
+Rock: That’s beautiful. Let’s stay with that sensation. Feel the warmth in your hands, and notice how it’s spreading to your heart. Let’s gently breathe into that space. As you breathe, what else do you notice in your chest or around your heart area?
 
-**Community member:** Because I'm holding a hot chocolate, I can feel warmth in my hand. And is spreading to my heart.
+Community member: The cold air is coming in through my nose, but still, because I'm holding hot chocolate, it's warm.
 
-**Rock:** That’s beautiful. Let’s stay with that sensation. Feel the warmth in your hands, and notice how it’s spreading to your heart. Let’s gently breathe into that space. As you breathe, what else do you notice in your chest or around your heart area?
+Rock: Let’s explore that contrast. Feel the cool air entering through your nose, and the warmth radiating from your hands and heart. Notice how both sensations can coexist. What does that balance between cold and warmth tell you about surviving the winter storm?
 
-**Community member:** The cold air is coming in through my nose, but still, because I'm holding hot chocolate, it's warm.
+Community member: It feels like, even though it's cold when I'm with my friends who is carrying each other and having a fun moment, I feel like it can be warm.
 
-**Rock:** Let’s explore that contrast. Feel the cool air entering through your nose, and the warmth radiating from your hands and heart. Notice how both sensations can coexist. What does that balance between cold and warmth tell you about surviving the winter storm?
+Rock: Yes, that feeling of connection and shared warmth can soften the edges of the cold. Let’s pause here and gently invite your awareness to your heart. What sensations are arising there as you reflect on the warmth of companionship in the storm?
 
-**Community member:** It feels like, even though it's cold when I'm with my friends who is carrying each other and having a fun moment, I feel like it can be warm.
+Community member: Like, I think being a best friend means that how many meals that we shared each together. And because it was inside the snowstorm, we should cook everything and we always had meals together from the breakfast, lunch, and dinner. And sharing soup, like sharing hot food, warm food, was so great.
 
-**Rock:** Yes, that feeling of connection and shared warmth can soften the edges of the cold. Let’s pause here and gently invite your awareness to your heart. What sensations are arising there as you reflect on the warmth of companionship in the storm?
+Rock: That’s a powerful image. Let’s bring that warmth into your awareness now. Notice how sharing those warm meals felt in your body. Where do you sense that feeling of togetherness and nourishment right now?
 
-**Community member:** Like, I think being a best friend means that how many meals that we shared each together. And because it was inside the snowstorm, we should cook everything and we always had meals together from the breakfast, lunch, and dinner. And sharing soup, like sharing hot food, warm food, was so great.
+Community member: You mean in my body?
 
-**Rock:** That’s a powerful image. Let’s bring that warmth into your awareness now. Notice how sharing those warm meals felt in your body. Where do you sense that feeling of togetherness and nourishment right now?
+Rock: Yes, exactly. In your body. Take a moment and notice where that feeling of togetherness and warmth lives. Maybe it’s a gentle glow in your chest, or a soft fullness in your belly. Let’s explore what’s present for you right now.
 
-**Community member:** You mean in my body?
+Community member: Eating soft.
 
-**Rock:** Yes, exactly. In your body. Take a moment and notice where that feeling of togetherness and warmth lives. Maybe it’s a gentle glow in your chest, or a soft fullness in your belly. Let’s explore what’s present for you right now.
-
-**Community member:** Eating soft.
-
-**Rock:** That softness is important. Let’s sit with that soft sensation in your body. As you breathe, notice if it expands or shifts. What is this softness telling you about how you experience surviving the winter storm?
+Rock: That softness is important. Let’s sit with that soft sensation in your body. As you breathe, notice if it expands or shifts. What is this softness telling you about how you experience surviving the winter storm?
+```
 
 ## References
 
