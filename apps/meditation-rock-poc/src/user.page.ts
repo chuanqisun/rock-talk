@@ -125,7 +125,7 @@ const UserPage = createComponent(() => {
 
   const template = html`
     <header>
-      <span>Meditation Session</span>
+      <span>RockTalk Session</span>
       <button commandfor="connection-dialog" command="show-modal">Setup</button>
     </header>
 
