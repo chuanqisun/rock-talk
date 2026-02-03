@@ -9,6 +9,9 @@
         "systemPrompt": {
           ".read": true
         },
+        "originStory": {
+          ".read": true
+        },
         "sessions": {
           ".read": true,
           ".write": true
