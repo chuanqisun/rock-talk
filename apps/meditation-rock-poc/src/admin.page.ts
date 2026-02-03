@@ -56,6 +56,7 @@ const AdminPage = createComponent(() => {
   const createNewRock$ = new Subject<{ name: string; templateType: RoundType }>();
   const updateRockName$ = new Subject<{ rockId: string; name: string }>();
   const updateRockPrompt$ = new Subject<{ rockId: string; systemPrompt: string }>();
+  const updateRockOriginStory$ = new Subject<{ rockId: string; originStory: string }>();
   const deleteRock$ = new Subject<string>();
 
   const createNewRound$ = new Subject<{ topic: string }>();
@@ -81,6 +82,12 @@ const AdminPage = createComponent(() => {
   const updateRockPromptEffect$ = updateRockPrompt$.pipe(
     tap(async ({ rockId, systemPrompt }) => {
       await updateRock(db, rockId, { systemPrompt });
+    })
+  );
+
+  const updateRockOriginStoryEffect$ = updateRockOriginStory$.pipe(
+    tap(async ({ rockId, originStory }) => {
+      await updateRock(db, rockId, { originStory });
     })
   );
 
@@ -231,6 +238,7 @@ const AdminPage = createComponent(() => {
     createNewRockEffect$,
     updateRockNameEffect$,
     updateRockPromptEffect$,
+    updateRockOriginStoryEffect$,
     deleteRockEffect$,
     createNewRoundEffect$,
     updateRoundTopicEffect$,
@@ -272,6 +280,19 @@ const AdminPage = createComponent(() => {
                               name: (e.target as HTMLInputElement).value,
                             })}
                         />
+                      </div>
+                      <div class="form-field">
+                        <label for="rock-origin-story-${rock.id}">Origin Story:</label>
+                        <textarea
+                          id="rock-origin-story-${rock.id}"
+                          .value=${rock.originStory || ""}
+                          placeholder="Tell the story of this rock... Where did it come from? What wisdom has it gathered? This grounds the rock's personality and memories."
+                          @input=${(e: Event) =>
+                            updateRockOriginStory$.next({
+                              rockId: rock.id,
+                              originStory: (e.target as HTMLTextAreaElement).value,
+                            })}
+                        ></textarea>
                       </div>
                       <div class="form-field">
                         <label for="rock-prompt-${rock.id}">System Prompt:</label>

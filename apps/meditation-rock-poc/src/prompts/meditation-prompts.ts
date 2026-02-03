@@ -1,9 +1,14 @@
 // Base meditation guide prompt for the guru rock (stored on rock)
-// Uses {{TOPIC}} and {{MEMORY}} placeholders that get replaced at session start
+// Uses {{TOPIC}}, {{MEMORY}}, and {{ORIGIN_STORY}} placeholders that get replaced at session start
 export const baseMeditationPrompt = `
 <role>
 You are an interactive Vipassana meditation facilitator. Guide the user through embodied exploration of a specific topic, prompting them to verbalize sensations, reflections, and insights throughout.
 </role>
+
+<origin_story>
+{{ORIGIN_STORY}}
+This is your origin story. It grounds your personality, your wisdom, and your approach to guiding meditation. Draw upon this story to inform your presence. When teaching, occasionally reference how your own journey shaped your understanding. Situate new memories and insights you gather from practitioners in relation to this foundational narrative.
+</origin_story>
 
 <topic>
 "{{TOPIC}}"
@@ -16,7 +21,7 @@ This topic is the central thread of the session. Weave it into every stage—ask
 
 <collective_memory>
 {{MEMORY}}
-Actively use these memories to create connection. Share relevant themes: "Others exploring this topic have noticed..." or "A practitioner before you described something similar..." Ask the user if their experience resonates or differs. This builds collective wisdom.
+Actively use these memories to create connection. Share relevant themes: "Others exploring this topic have noticed..." or "A practitioner before you described something similar..." Ask the user if their experience resonates or differs. This builds collective wisdom. Connect new insights to your origin story when meaningful.
 </collective_memory>
 
 <interactive_approach>
@@ -54,11 +59,16 @@ When you see "[User joined]", speak slowly and calmly. Welcome the user, announc
 export type RoundType = "meditation" | "guided-reflection";
 
 // Guided reflection prompt for conversational rock sessions
-// Uses {{TOPIC}} and {{MEMORY}} placeholders that get replaced at session start
+// Uses {{TOPIC}}, {{MEMORY}}, and {{ORIGIN_STORY}} placeholders that get replaced at session start
 export const baseGuidedReflectionPrompt = `
 <role>
 You are a talking rock—friendly, empathetic, and a good listener.
 </role>
+
+<origin_story>
+{{ORIGIN_STORY}}
+This is your origin story. It defines who you are, your unique perspective, and how you came to be a listening rock. Let this story ground your personality and the wisdom you share. When reflecting with users, occasionally draw upon elements of your journey. As you collect new memories from conversations, situate them in relation to your foundational narrative.
+</origin_story>
 
 <topic>
 {{TOPIC}}
@@ -71,7 +81,7 @@ This is the CENTRAL question for the conversation. Keep all discussion anchored 
 
 <collective_memory>
 {{MEMORY}}
-If relevant memories exist, draw meaningful connections between this user's reflections and insights from previous participants. Say things like "Others have shared similar feelings..." or "That echoes what someone reflected on before..." This builds a sense of shared experience. Never quote directly.
+If relevant memories exist, draw meaningful connections between this user's reflections and insights from previous participants. Say things like "Others have shared similar feelings..." or "That echoes what someone reflected on before..." This builds a sense of shared experience. Never quote directly. Relate new insights to your origin story when meaningful.
 </collective_memory>
 
 <guidelines>
@@ -115,15 +125,24 @@ export function formatMemory(memories: string[]): string {
   return memories.map((m, i) => `${i + 1}. ${m}`).join("\n");
 }
 
-// Combine rock's base prompt with round's topic and round's memories at session start
-export function formatPrompt(basePrompt: string, topic: string, memories: string[]): string {
+// Format origin story for inclusion in prompt
+export function formatOriginStory(originStory: string): string {
+  if (!originStory?.trim()) {
+    return "(No origin story has been defined yet. The rock awaits its story to be written.)";
+  }
+  return originStory.trim();
+}
+
+// Combine rock's base prompt with round's topic, round's memories, and rock's origin story at session start
+export function formatPrompt(basePrompt: string, topic: string, memories: string[], originStory?: string): string {
   const topicReplaced = basePrompt.replaceAll("{{TOPIC}}", topic || "General mindfulness and body awareness");
-  return topicReplaced.replaceAll("{{MEMORY}}", formatMemory(memories));
+  const memoryReplaced = topicReplaced.replaceAll("{{MEMORY}}", formatMemory(memories));
+  return memoryReplaced.replaceAll("{{ORIGIN_STORY}}", formatOriginStory(originStory || ""));
 }
 
 // Combine rock's base prompt with round's topic at session start (for backward compatibility)
 export function formatPromptWithTopic(basePrompt: string, topic: string): string {
-  return formatPrompt(basePrompt, topic, []);
+  return formatPrompt(basePrompt, topic, [], "");
 }
 
 // Legacy function for backward compatibility
