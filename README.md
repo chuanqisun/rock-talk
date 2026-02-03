@@ -1,3 +1,3 @@
 # Rock Talk
 
-Prototype for human-rock interaction
+Prototype for human-rock interaction experiement
