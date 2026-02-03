@@ -16,6 +16,7 @@ export interface DbRound {
 export interface DbRock {
   id?: string;
   systemPrompt: string;
+  originStory: string;
   name: string;
   createdAt: string;
   sessions?: DbSession[];
@@ -70,6 +71,7 @@ export function observeRocks(db: Database): Observable<DbRockWithId[]> {
             id: rockId,
             name: rockData.name,
             systemPrompt: rockData.systemPrompt,
+            originStory: rockData.originStory || "",
             createdAt: rockData.createdAt,
             sessions: rockData.sessions ? Object.values(rockData.sessions) : [],
           });
@@ -98,6 +100,7 @@ export async function createRock(db: Database, name: string, templateType: Round
   const rock: DbRock = {
     name,
     systemPrompt: getDefaultPromptForType(templateType),
+    originStory: "",
     createdAt: new Date().toISOString(),
     sessions: [],
   };
@@ -322,7 +325,7 @@ export function observeSessionsForRock(db: Database, rockId: string): Observable
 }
 
 // Fetch rock config (system prompt) for user session
-// Fetches rock's base prompt, round's topic, and past memories from the round
+// Fetches rock's base prompt, origin story, round's topic, and past memories from the round
 export async function fetchRockConfig(rockId: string, roundId: string): Promise<string> {
   // Fetch the round's topic (public read)
   const topicRef = ref(db, `rounds/${roundId}/topic`);
@@ -333,6 +336,11 @@ export async function fetchRockConfig(rockId: string, roundId: string): Promise<
   const rockRef = ref(db, `rocks/${rockId}/systemPrompt`);
   const rockSnapshot = await get(rockRef);
   const basePrompt = rockSnapshot.exists() ? rockSnapshot.val() || baseMeditationPrompt : baseMeditationPrompt;
+
+  // Fetch the rock's origin story
+  const originStoryRef = ref(db, `rocks/${rockId}/originStory`);
+  const originStorySnapshot = await get(originStoryRef);
+  const originStory = originStorySnapshot.exists() ? originStorySnapshot.val() || "" : "";
 
   // Fetch all past memories from sessions in the same round
   const sessionsRef = ref(db, `rounds/${roundId}/sessions`);
@@ -348,8 +356,8 @@ export async function fetchRockConfig(rockId: string, roundId: string): Promise<
     }
   }
 
-  // Combine the rock's prompt with the round's topic and memories
-  return formatPrompt(basePrompt, topic, memories);
+  // Combine the rock's prompt with the round's topic, memories, and origin story
+  return formatPrompt(basePrompt, topic, memories, originStory);
 }
 
 // Firebase configuration - using same project as firebase-poc
