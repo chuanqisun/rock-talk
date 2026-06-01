@@ -22,7 +22,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
   });
 
   const session = new RealtimeSession(agent, {
-    model: "gpt-realtime",
+    model: "gpt-realtime-2",
     config: {
       outputModalities: ["text", "audio"],
       turnDetection: {
@@ -31,7 +31,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
       audio: {
         input: {
           transcription: {
-            model: "gpt-4o-mini-transcribe",
+            model: "gpt-realtime-whisper",
           },
         },
         output: {
@@ -64,14 +64,14 @@ export function useMeditationSession(props: MeditationSessionProps) {
 
   const transcripts$ = transcript$.pipe(
     scan((acc, curr) => [...acc, curr], [] as { itemId: string; role: string; content: string }[]),
-    startWith([] as { itemId: string; role: string; content: string }[])
+    startWith([] as { itemId: string; role: string; content: string }[]),
   );
 
   const orderedTranscripts$ = combineLatest([itemIds$.pipe(startWith([] as string[])), transcripts$]).pipe(
     map(([ids, transcripts]) => {
       return ids.map((id) => transcripts.find((t) => t.itemId === id)).filter((item) => !!item);
     }),
-    tap((ordered) => console.log("ordered transcripts:", ordered))
+    tap((ordered) => console.log("ordered transcripts:", ordered)),
   );
 
   const startConnection$ = new Subject<void>();
@@ -87,7 +87,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
         apiKey: apiKeys$.value.openai!,
         voice: ["marin", "cedar", "coral"].at(0)!,
         model: "gpt-realtime",
-      })
+      }),
     ),
     switchMap(async (token) => {
       await session
@@ -119,7 +119,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
       } catch (error) {
         console.error("Error fetching config:", error);
       }
-    })
+    }),
   );
 
   const sessionsStop$ = stopConnection$.pipe(
@@ -130,7 +130,7 @@ export function useMeditationSession(props: MeditationSessionProps) {
     catchError((error) => {
       console.error("Error during disconnection:", error);
       return EMPTY;
-    })
+    }),
   );
 
   const effects$ = merge(sessionsStart$, sessionsStop$).pipe(ignoreElements());

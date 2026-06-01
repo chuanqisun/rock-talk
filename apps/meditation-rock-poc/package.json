@@ -13,7 +13,7 @@
     "vite": "^7.2.2"
   },
   "dependencies": {
-    "@openai/agents": "^0.4.4",
+    "@openai/agents": "^0.11.6",
     "@streamparser/json": "^0.0.22",
     "firebase": "^12.8.0",
     "lit-html": "^3.3.2",
